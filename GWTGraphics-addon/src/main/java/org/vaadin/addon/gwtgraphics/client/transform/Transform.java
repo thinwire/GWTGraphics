@@ -1,10 +1,10 @@
-package org.vaadin.addon.gwtgraphics.client.gradient;
+package org.vaadin.addon.gwtgraphics.client.transform;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GradientTransform {
+public abstract class Transform {
 
 	public enum TransformType {
 		ROTATE,
@@ -18,11 +18,30 @@ public class GradientTransform {
 	private TransformType type;
 	private List<Double> values = new ArrayList<Double>();
 	
-	private GradientTransform(TransformType type, double... values) {
+	protected Transform(TransformType type, double... values) {
 		this.type = type;
 		for(double v : values) {
 			this.values.add(v);
 		}
+	}
+	
+	protected double getValue(int idx) {
+		return values.get(idx);
+	}
+	
+	protected void setValue(int idx, double value) {
+		values.set(idx, value);
+	}
+	
+	protected void setValues(double... v) {
+		int i = 0; 
+		for(double d : v) {
+			values.set(i++, d);
+		}
+	}
+	
+	protected void setType(TransformType t) {
+		type = t;
 	}
 	
 	public TransformType getType() {
@@ -47,41 +66,40 @@ public class GradientTransform {
 		return "rotate";
 	}
 	
-	public static GradientTransform rotation(double amount) {
-		return new GradientTransform(TransformType.ROTATE, amount); 
+	public static RotationTransform rotation(double amount) {
+		return new RotationTransform(amount);
 	}
 	
-	public static GradientTransform translation(double xamount, double yamount) {
-		return new GradientTransform(TransformType.TRANSLATE, xamount, yamount);
+	public static TranslationTransform translation(double xamount, double yamount) {
+		return new TranslationTransform(xamount, yamount);
 	}
 	
-	public static GradientTransform scaling(double amount) {
-		return new GradientTransform(TransformType.SCALE, amount);
+	public static ScalingTransform scaling(double amount) {
+		return new ScalingTransform(amount);
 	}
 	
-	public static GradientTransform scaling(double xamount, double yamount) {
-		return new GradientTransform(TransformType.SCALE, xamount, yamount);
+	public static ScalingTransform scaling(double xamount, double yamount) {
+		return new ScalingTransform(xamount, yamount);
 	}
 	
-	public static GradientTransform skewX(double amount) {
-		return new GradientTransform(TransformType.SKEW_X, amount);
+	public static SkewTransform skewX(double amount) {
+		return new SkewTransform(amount, true);
 	}
 	
-	public static GradientTransform skewY(double amount) {
-		return new GradientTransform(TransformType.SKEW_Y, amount);
+	public static SkewTransform skewY(double amount) {
+		return new SkewTransform(amount, false);
 	}
 	
-	public static GradientTransform matrix(double a, double b, double c, double d, double tx, double ty) {
-		return new GradientTransform(TransformType.MATRIX, a, b, c, d, tx, ty);
+	public static MatrixTransform matrix(double a, double b, double c, double d, double tx, double ty) {
+		return new MatrixTransform(a, b, c, d, tx, ty);
 	}
 	
 	/**
 	 * Generate an SVG string.
-	 * @return tag field declaration, for example "transform=\"rotate(45)\""
+	 * @return tag field declaration, for example "rotate(45)"
 	 */
 	public String toSVGString() {
-		String tag = "transform=\"";
-		tag += getTypeString();
+		String tag = getTypeString();
 		tag += "(";
 		Iterator<Double> it = values.iterator();
 		while(it.hasNext()) {
@@ -91,7 +109,7 @@ public class GradientTransform {
 				tag += ",";
 			}
 		}
-		tag += ")\"";
+		tag += ")";
 		return tag;
 	}
 	
