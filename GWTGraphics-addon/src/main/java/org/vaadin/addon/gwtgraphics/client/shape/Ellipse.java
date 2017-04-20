@@ -29,10 +29,10 @@ public class Ellipse extends Shape {
 	/**
 	 * Creates a new Ellipse with the given position and radius properties.
 	 * 
-	 * @param x
+	 * @param cx
 	 *            the x-coordinate position of the center of the ellipse in
 	 *            pixels
-	 * @param y
+	 * @param cy
 	 *            the y-coordinate position of the center of the ellipse in
 	 *            pixels
 	 * @param radiusX
@@ -40,11 +40,35 @@ public class Ellipse extends Shape {
 	 * @param radiusY
 	 *            the y-axis radius of the ellipse in pixels
 	 */
-	public Ellipse(int x, int y, int radiusX, int radiusY) {
-		setRadiusX(radiusX);
-		setRadiusY(radiusY);
-		setX(x);
-		setY(y);
+	public Ellipse(double cx, double cy, double radiusX, double radiusY) {
+		setCenter(cx,cy);
+		setRadius(radiusX, radiusY);
+	}
+	
+	public void setCenter(double x, double y) {
+		setPropertyDouble("cx", x);
+		setPropertyDouble("cy", y);
+	}
+	
+	public double getCX() {
+		return getPropertyDouble("cx");
+	}
+	
+	public double getCY() {
+		return getPropertyDouble("cy");
+	}
+	
+	public void setRadius(double rx, double ry) {
+		setPropertyDouble("rx", rx);
+		setPropertyDouble("ry", ry);
+	}
+	
+	public double getRadiusX() {
+		return getPropertyDouble("rx");
+	}
+	
+	public double getRadiusY() {
+		return getPropertyDouble("ry");
 	}
 
 	@Override
@@ -52,60 +76,9 @@ public class Ellipse extends Shape {
 		return Ellipse.class;
 	}
 
-	/**
-	 * Returns the x-axis radius of the ellipse in pixels.
-	 * 
-	 * @return the x-axis radius of the ellipse in pixels
-	 */
-	public int getRadiusX() {
-		return getImpl().getEllipseRadiusX(getElement());
-	}
-
-	/**
-	 * Sets the x-axis radius of the ellipse in pixels.
-	 * 
-	 * @param radiusX
-	 *            the x-axis radius of the ellipse in pixels
-	 */
-	public void setRadiusX(int radiusX) {
-		getImpl().setEllipseRadiusX(getElement(), radiusX);
-	}
-
-	/**
-	 * Returns the y-axis radius of the ellipse in pixels.
-	 * 
-	 * @return the y-axis radius of the ellipse in pixels
-	 */
-	public int getRadiusY() {
-		return getImpl().getEllipseRadiusY(getElement());
-	}
-
-	/**
-	 * Sets the y-axis radius of the ellipse in pixels.
-	 * 
-	 * @param radiusY
-	 *            the y-axis radius of the ellipse in pixels
-	 */
-	public void setRadiusY(int radiusY) {
-		getImpl().setEllipseRadiusY(getElement(), radiusY);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.vaadin.gwtgraphics.client.Shape#setPropertyDouble(java.lang.String,
-	 * double)
-	 */
-	public void setPropertyDouble(String property, double value) {
-		property = property.toLowerCase();
-		if ("radiusx".equals(property)) {
-			setRadiusX((int) value);
-		} else if ("radiusy".equals(property)) {
-			setRadiusY((int) value);
-		} else {
-			super.setPropertyDouble(property, value);
-		}
+	@Override
+	public String getSVGElementName() {
+		return "ellipse";
 	}
 
 }

@@ -26,9 +26,9 @@ public class MoveTo extends ClosePath {
 
 	protected boolean relativeCoords;
 
-	protected int x;
+	protected double x;
 
-	protected int y;
+	protected double y;
 
 	/**
 	 * Instantiates a new MoveTo step with given properties.
@@ -40,7 +40,7 @@ public class MoveTo extends ClosePath {
 	 * @param y
 	 *            the y-coordinate in pixels
 	 */
-	public MoveTo(boolean relativeCoords, int x, int y) {
+	public MoveTo(boolean relativeCoords, double x, double y) {
 		this.relativeCoords = relativeCoords;
 		this.x = x;
 		this.y = y;
@@ -61,7 +61,7 @@ public class MoveTo extends ClosePath {
 	 * 
 	 * @return the x-coordinate in pixels
 	 */
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -70,12 +70,12 @@ public class MoveTo extends ClosePath {
 	 * 
 	 * @return the y-coordinate in pixels
 	 */
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
 	@Override
-	public String getSVGString() {
+	public String toSVGString() {
 		return isRelativeCoords() ? "m" : "M" + getX() + " " + getY();
 	}
 
@@ -90,28 +90,13 @@ public class MoveTo extends ClosePath {
 		this.relativeCoords = relativeCoords;
 	}
 
-	/**
-	 * Sets x component of step coordinate
-	 * 
-	 * @param x
-	 *            x coordinate
-	 */
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	/**
-	 * Sets y component of step coordinate
-	 * 
-	 * @param y
-	 *            y coordinate
-	 */
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public void set(int x, int y) {
+	public void set(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	@Override
+	public MoveTo cloneStep() {
+		return new MoveTo(relativeCoords, x, y);
 	}
 }

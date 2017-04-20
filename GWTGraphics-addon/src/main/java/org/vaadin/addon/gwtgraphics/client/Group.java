@@ -24,9 +24,9 @@ import java.util.List;
  * @author Henri Kerola
  * 
  */
-public class Group extends VectorObject implements VectorObjectContainer, Positionable {
+public class Group extends VectorObject implements VectorObjectContainer {
 
-	private List<VectorObject> childrens = new ArrayList<VectorObject>();
+	private List<VectorObject> children = new ArrayList<VectorObject>();
 
 	/**
 	 * Creates an empty Group.
@@ -46,7 +46,7 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 	 * gwtgraphics.client.VectorObject)
 	 */
 	public VectorObject add(VectorObject vo) {
-		childrens.add(vo);
+		children.add(vo);
 		getImpl().add(getElement(), vo.getElement(), vo.isAttached());
 		vo.setParent(this);
 		return vo;
@@ -64,11 +64,11 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 			throw new IndexOutOfBoundsException();
 		}
 
-		if (childrens.contains(vo)) {
-			childrens.remove(vo);
+		if (children.contains(vo)) {
+			children.remove(vo);
 		}
 
-		childrens.add(beforeIndex, vo);
+		children.add(beforeIndex, vo);
 		vo.setParent(this);
 		getImpl().insert(getElement(), vo.getElement(), beforeIndex,
 				vo.isAttached());
@@ -89,7 +89,7 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 		}
 		vo.setParent(null);
 		getElement().removeChild(vo.getElement());
-		childrens.remove(vo);
+		children.remove(vo);
 		return vo;
 	}
 
@@ -115,7 +115,7 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 	 */
 	public void clear() {
 		List<VectorObject> childrensCopy = new ArrayList<VectorObject>();
-		childrensCopy.addAll(childrens);
+		childrensCopy.addAll(children);
 		for (VectorObject vo : childrensCopy) {
 			this.remove(vo);
 		}
@@ -128,7 +128,7 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 	 * org.vaadin.gwtgraphics.client.VectorObjectContainer#getVectorObject(int)
 	 */
 	public VectorObject getVectorObject(int index) {
-		return childrens.get(index);
+		return children.get(index);
 	}
 
 	/*
@@ -139,7 +139,7 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 	 * ()
 	 */
 	public int getVectorObjectCount() {
-		return childrens.size();
+		return children.size();
 	}
 
 	/*
@@ -149,7 +149,7 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 	 */
 	@Override
 	protected void doAttachChildren() {
-		for (VectorObject vo : childrens) {
+		for (VectorObject vo : children) {
 			vo.onAttach();
 		}
 	}
@@ -161,28 +161,14 @@ public class Group extends VectorObject implements VectorObjectContainer, Positi
 	 */
 	@Override
 	protected void doDetachChildren() {
-		for (VectorObject vo : childrens) {
+		for (VectorObject vo : children) {
 			vo.onDetach();
 		}
 	}
-
+	
 	@Override
-	public int getX() {
-		return getImpl().getX(getElement());
+	public String getSVGElementName() {
+		return "g";
 	}
 
-	@Override
-	public void setX(int x) {
-		getImpl().setX(getElement(), x, isAttached());
-	}
-
-	@Override
-	public int getY() {
-		return getImpl().getY(getElement());
-	}
-
-	@Override
-	public void setY(int y) {
-		getImpl().setY(getElement(), y, isAttached());
-	}
 }

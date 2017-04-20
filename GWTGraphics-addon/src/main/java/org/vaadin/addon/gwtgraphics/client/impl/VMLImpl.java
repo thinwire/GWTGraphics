@@ -49,6 +49,8 @@ import com.google.gwt.regexp.shared.RegExp;
  * 
  */
 public class VMLImpl extends SVGImpl {
+	
+	// TODO: get rid of all this crap
 
 	@Override
 	public String getRendererString() {
@@ -320,8 +322,8 @@ public class VMLImpl extends SVGImpl {
 	@Override
 	public void drawPath(Element element, List<PathStep> steps) {
 		StringBuilder path = new StringBuilder();
-		int x = -1;
-		int y = -1;
+		double x = -1;
+		double y = -1;
 		for (PathStep step : steps) {
 			appendPathStep(path, step);
 

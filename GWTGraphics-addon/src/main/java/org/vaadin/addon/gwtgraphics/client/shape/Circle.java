@@ -39,8 +39,7 @@ public class Circle extends Shape {
 	 */
 	public Circle(int x, int y, int radius) {
 		setRadius(radius);
-		setX(x);
-		setY(y);
+		setPosition(x, y);
 	}
 
 	@Override
@@ -53,8 +52,8 @@ public class Circle extends Shape {
 	 * 
 	 * @return the radius of the circle in pixels
 	 */
-	public int getRadius() {
-		return getImpl().getCircleRadius(getElement());
+	public double getRadius() {
+		return getPropertyDouble("r");
 	}
 
 	/**
@@ -63,23 +62,13 @@ public class Circle extends Shape {
 	 * @param radius
 	 *            the radius of the circle in pixels
 	 */
-	public void setRadius(int radius) {
-		getImpl().setCircleRadius(getElement(), radius);
+	public void setRadius(double radius) {
+		setProperty("r", radius);
+		redraw();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.vaadin.gwtgraphics.client.Shape#setPropertyDouble(java.lang.String,
-	 * double)
-	 */
-	public void setPropertyDouble(String property, double value) {
-		property = property.toLowerCase();
-		if ("radius".equals(property)) {
-			setRadius((int) value);
-		} else {
-			super.setPropertyDouble(property, value);
-		}
+	@Override
+	public String getSVGElementName() {
+		return "circle";
 	}
 }

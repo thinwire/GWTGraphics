@@ -38,8 +38,7 @@ public class Text extends Shape {
 	 *            the text to be rendered
 	 */
 	public Text(int x, int y, String text) {
-		setX(x);
-		setY(y);
+		setPosition(x, y);
 		setText(text);
 		setFontFamily("Arial");
 		setFontSize(20);
@@ -139,5 +138,10 @@ public class Text extends Shape {
 		} else {
 			super.setPropertyDouble(property, value);
 		}
+	}
+
+	@Override
+	public String getSVGElementName() {
+		return "text";
 	}
 }

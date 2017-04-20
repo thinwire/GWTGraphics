@@ -23,10 +23,16 @@ package org.vaadin.addon.gwtgraphics.client.shape.path;
  */
 public abstract class PathStep {
 
-	public abstract String getSVGString();
+	/**
+	 * Perform deep clone
+	 */
+	public abstract <T extends PathStep> T cloneStep();
+	
+	public abstract String toSVGString();
 
 	@Override
 	public String toString() {
-		return getSVGString();
+		return toSVGString();
 	}
+	
 }

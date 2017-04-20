@@ -53,6 +53,8 @@ import com.google.gwt.user.client.ui.RootPanel;
  * 
  */
 public class SVGImpl {
+	
+	// TODO: get rid of all this crap
 
 	public String getRendererString() {
 		return "SVG";

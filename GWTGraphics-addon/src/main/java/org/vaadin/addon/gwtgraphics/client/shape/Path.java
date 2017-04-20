@@ -116,29 +116,8 @@ public class Path extends Shape implements Cloneable {
 		int length = steps.size();
 		Path p = new Path(length);
 		p.setRedrawingType(RedrawType.MANUAL);
-		for (PathStep step : steps) {
-			if (step.getClass() == ClosePath.class) {
-				p.addStep(new ClosePath());
-			} else if (step.getClass() == MoveTo.class) {
-				MoveTo _step = (MoveTo) step;
-				p.addStep(new MoveTo(_step.isRelativeCoords(), _step.getX(),
-						_step.getY()));
-			} else if (step.getClass() == LineTo.class) {
-				LineTo _step = (LineTo) step;
-				p.addStep(new LineTo(_step.isRelativeCoords(), _step.getX(),
-						_step.getY()));
-			} else if (step.getClass() == CurveTo.class) {
-				CurveTo _step = (CurveTo) step;
-				p.addStep(new CurveTo(_step.isRelativeCoords(), _step.getX1(),
-						_step.getY1(), _step.getX2(), _step.getY2(), _step
-								.getX(), _step.getY()));
-			} else if (step.getClass() == Arc.class) {
-				Arc _step = (Arc) step;
-				p.addStep(new Arc(_step.isRelativeCoords(), _step.getRx(),
-						_step.getRy(), _step.getxAxisRotation(), _step
-								.isLargeArc(), _step.isSweep(), _step.getX(),
-						_step.getY()));
-			}
+		for(PathStep s : steps) {
+			p.addStep(s.cloneStep());;
 		}
 		return p;
 		
@@ -155,23 +134,12 @@ public class Path extends Shape implements Cloneable {
 	 * @see org.vaadin.gwtgraphics.client.Shape#getX()
 	 */
 	@Override
-	public int getX() {
+	public double getX() {
 		return ((MoveTo) steps.get(0)).getX();
 	}
 
 	public RedrawType getRedrawingType() {
 		return redrawingType;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.vaadin.gwtgraphics.client.Shape#setX(int)
-	 */
-	@Override
-	public void setX(int x) {
-		steps.set(0, new MoveTo(false, x, getY()));
-		issueRedraw(false);
 	}
 
 	public boolean isDeferredDrawPending() {
@@ -188,19 +156,13 @@ public class Path extends Shape implements Cloneable {
 	 * @see org.vaadin.gwtgraphics.client.Shape#getY()
 	 */
 	@Override
-	public int getY() {
+	public double getY() {
 		return ((MoveTo) steps.get(0)).getY();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.vaadin.gwtgraphics.client.Shape#setY(int)
-	 */
 	@Override
-	public void setY(int y) {
-		steps.set(0, new MoveTo(false, getX(), y));
-		issueRedraw(false);
+	public void setPosition(double x, double y) {
+		steps.set(0, new MoveTo(false, x, y));
 	}
 
 	/**
@@ -423,8 +385,10 @@ public class Path extends Shape implements Cloneable {
 
 	private void drawPath() {
 		getImpl().drawPath(getElement(), steps);
+		redraw();
 	}
 
+	// TODO, XXX: get rid of this crap
 	private void drawPathDeferred() {
 		if (!deferredDrawPending) {
 			deferredDrawPending = true;
@@ -452,5 +416,10 @@ public class Path extends Shape implements Cloneable {
 		} else if (redrawIfManual || redrawingType == RedrawType.AUTO) {
 			drawPath();
 		}
+	}
+
+	@Override
+	public String getSVGElementName() {
+		return "path";
 	}
 }

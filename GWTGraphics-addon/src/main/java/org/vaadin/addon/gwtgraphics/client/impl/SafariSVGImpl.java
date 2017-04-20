@@ -25,6 +25,8 @@ import com.google.gwt.dom.client.Element;
  * 
  */
 public class SafariSVGImpl extends SVGImpl {
+	
+	// TODO: get rid of all this crap
 
 	@Override
 	public void setX(Element element, int x, boolean attached) {

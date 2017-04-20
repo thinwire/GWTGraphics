@@ -34,12 +34,17 @@ public class LineTo extends MoveTo {
 	 * @param y
 	 *            the y-coordinate in pixels
 	 */
-	public LineTo(boolean relativeCoords, int x, int y) {
+	public LineTo(boolean relativeCoords, double x, double y) {
 		super(relativeCoords, x, y);
 	}
 
 	@Override
-	public String getSVGString() {
+	public String toSVGString() {
 		return isRelativeCoords() ? "l" : "L" + getX() + " " + getY();
+	}
+	
+	@Override
+	public LineTo cloneStep() {
+		return new LineTo(relativeCoords, x, y);
 	}
 }

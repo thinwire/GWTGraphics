@@ -30,7 +30,13 @@ public class ClosePath extends PathStep {
 	}
 
 	@Override
-	public String getSVGString() {
+	public String toSVGString() {
 		return "z";
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ClosePath cloneStep() {
+		return new ClosePath();
 	}
 }

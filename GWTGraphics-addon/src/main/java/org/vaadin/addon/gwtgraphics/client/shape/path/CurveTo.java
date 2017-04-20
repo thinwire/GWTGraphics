@@ -25,16 +25,10 @@ package org.vaadin.addon.gwtgraphics.client.shape.path;
  */
 public class CurveTo extends LineTo {
 
-	private int x1;
+	private double x1, y1, x2, y2;
 
-	private int y1;
-
-	private int x2;
-
-	private int y2;
-
-	public CurveTo(boolean relativeCoords, int x1, int y1, int x2, int y2,
-			int x, int y) {
+	public CurveTo(boolean relativeCoords, double x1, double y1, double x2, double y2,
+			double x, double y) {
 		super(relativeCoords, x, y);
 		this.x1 = x1;
 		this.y1 = y1;
@@ -42,39 +36,39 @@ public class CurveTo extends LineTo {
 		this.y2 = y2;
 	}
 
-	public int getX1() {
+	public double getX1() {
 		return x1;
 	}
 
-	public int getY1() {
+	public double getY1() {
 		return y1;
 	}
 
-	public int getX2() {
+	public double getX2() {
 		return x2;
 	}
 
-	public int getY2() {
+	public double getY2() {
 		return y2;
 	}
 
-	public void setX1(int x1) {
+	public void setX1(double x1) {
 		this.x1 = x1;
 	}
 
-	public void setY1(int y1) {
+	public void setY1(double y1) {
 		this.y1 = y1;
 	}
 
-	public void setX2(int x2) {
+	public void setX2(double x2) {
 		this.x2 = x2;
 	}
 
-	public void setY2(int y2) {
+	public void setY2(double y2) {
 		this.y2 = y2;
 	}
 
-	public void set(int x1, int y1, int x2, int y2, int x, int y) {
+	public void set(double x1, double y1, double x2, double y2, double x, double y) {
 		super.set(x, y);
 		this.x1 = x1;
 		this.y1 = y1;
@@ -83,8 +77,13 @@ public class CurveTo extends LineTo {
 	}
 
 	@Override
-	public String getSVGString() {
+	public String toSVGString() {
 		return isRelativeCoords() ? "c" : "C" + getX1() + " " + getY1() + " "
 				+ getX2() + " " + getY2() + " " + getX() + " " + getY();
+	}
+	
+	@Override
+	public CurveTo cloneStep() {
+		return new CurveTo(relativeCoords, x1, y1, x2, y2, x, y);
 	}
 }

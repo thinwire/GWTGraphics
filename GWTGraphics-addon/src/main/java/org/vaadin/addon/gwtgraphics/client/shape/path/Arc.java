@@ -23,18 +23,18 @@ package org.vaadin.addon.gwtgraphics.client.shape.path;
  */
 public class Arc extends LineTo {
 
-	private int rx;
+	private double rx;
 
-	private int ry;
+	private double ry;
 
-	private int xAxisRotation;
+	private double xAxisRotation;
 
 	private boolean largeArc;
 
 	private boolean sweep;
 
-	public Arc(boolean relativeCoords, int rx, int ry, int xAxisRotation,
-			boolean largeArc, boolean sweep, int x, int y) {
+	public Arc(boolean relativeCoords, double rx, double ry, double xAxisRotation,
+			boolean largeArc, boolean sweep, double x, double y) {
 		super(relativeCoords, x, y);
 		this.rx = rx;
 		this.ry = ry;
@@ -44,15 +44,15 @@ public class Arc extends LineTo {
 
 	}
 
-	public int getRx() {
+	public double getRx() {
 		return rx;
 	}
 
-	public int getRy() {
+	public double getRy() {
 		return ry;
 	}
 
-	public int getxAxisRotation() {
+	public double getxAxisRotation() {
 		return xAxisRotation;
 	}
 
@@ -85,9 +85,14 @@ public class Arc extends LineTo {
 	}
 
 	@Override
-	public String getSVGString() {
+	public String toSVGString() {
 		return isRelativeCoords() ? "a" : "A" + getRx() + "," + getRy() + " "
 				+ getxAxisRotation() + " " + (isLargeArc() ? "1" : "0") + ","
 				+ (isSweep() ? "1" : "0") + " " + getX() + "," + getY();
+	}
+	
+	@Override
+	public Arc cloneStep() {
+		return new Arc(relativeCoords, rx, ry, xAxisRotation, largeArc, sweep, x, y);
 	}
 }

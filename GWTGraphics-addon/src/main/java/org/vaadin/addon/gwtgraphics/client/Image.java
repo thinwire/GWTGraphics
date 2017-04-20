@@ -23,7 +23,7 @@ import org.vaadin.addon.gwtgraphics.client.animation.Animatable;
  * @author Henri Kerola
  * 
  */
-public class Image extends VectorObject implements Positionable, Animatable {
+public class Image extends VectorObject implements Animatable {
 
 	/**
 	 * Create a new Image with the given properties.
@@ -42,10 +42,8 @@ public class Image extends VectorObject implements Positionable, Animatable {
 	 *            URL to an image to be shown.
 	 */
 	public Image(int x, int y, int width, int height, String href) {
-		setX(x);
-		setY(y);
-		setWidth(width);
-		setHeight(height);
+		setPosition(x,y);
+		setSize(width,height);
 		setHref(href);
 	}
 
@@ -54,49 +52,13 @@ public class Image extends VectorObject implements Positionable, Animatable {
 		return Image.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.vaadin.gwtgraphics.client.Positionable#getX()
-	 */
-	public int getX() {
-		return getImpl().getX(getElement());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.vaadin.gwtgraphics.client.Positionable#setX(int)
-	 */
-	public void setX(int x) {
-		getImpl().setX(getElement(), x, isAttached());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.vaadin.gwtgraphics.client.Positionable#getY()
-	 */
-	public int getY() {
-		return getImpl().getY(getElement());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.vaadin.gwtgraphics.client.Positionable#setY(int)
-	 */
-	public void setY(int y) {
-		getImpl().setY(getElement(), y, isAttached());
-	}
-
 	/**
 	 * Returns the URL of the image currently shown.
 	 * 
 	 * @return URL of the image
 	 */
 	public String getHref() {
-		return getImpl().getImageHref(getElement());
+		return getProperty("href", "");
 	}
 
 	/**
@@ -106,106 +68,14 @@ public class Image extends VectorObject implements Positionable, Animatable {
 	 *            URL of the image to be shown
 	 */
 	public void setHref(String href) {
-		getImpl().setImageHref(getElement(), href);
-	}
-
-	/**
-	 * Returns the width of the Image in pixels.
-	 * 
-	 * @return the width of the Image in pixels
-	 */
-	public int getWidth() {
-		return getImpl().getWidth(getElement());
-	}
-
-	/**
-	 * Sets the width of the Image in pixels.
-	 * 
-	 * @param width
-	 *            the new width in pixels
-	 */
-	public void setWidth(int width) {
-		getImpl().setWidth(getElement(), width);
+		setProperty("href", href);
+		redraw();
 	}
 
 	@Override
-	public void setWidth(String width) {
-		boolean successful = false;
-		if (width != null && width.endsWith("px")) {
-			try {
-				setWidth(Integer
-						.parseInt(width.substring(0, width.length() - 2)));
-				successful = true;
-			} catch (NumberFormatException e) {
-			}
-		}
-		if (!successful) {
-			throw new IllegalArgumentException(
-					"Only pixel units (px) are supported");
-		}
+	public String getSVGElementName() {
+		return "image";
 	}
 
-	/**
-	 * Returns the height of the Image in pixels.
-	 * 
-	 * @return the height of the Image in pixels
-	 */
-	public int getHeight() {
-		return getImpl().getHeight(getElement());
-	}
-
-	/**
-	 * Sets the height of the Image in pixels.
-	 * 
-	 * @param height
-	 *            the new height in pixels
-	 */
-	public void setHeight(int height) {
-		getImpl().setHeight(getElement(), height);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.vaadin.gwtgraphics.client.VectorObject#setHeight(java.lang.String)
-	 */
-	@Override
-	public void setHeight(String height) {
-		boolean successful = false;
-		if (height != null && height.endsWith("px")) {
-			try {
-				setHeight(Integer.parseInt(height.substring(0,
-						height.length() - 2)));
-				successful = true;
-			} catch (NumberFormatException e) {
-			}
-		}
-		if (!successful) {
-			throw new IllegalArgumentException(
-					"Only pixel units (px) are supported");
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.vaadin.gwtgraphics.client.animation.Animatable#setPropertyDouble(
-	 * java.lang.String, double)
-	 */
-	public void setPropertyDouble(String property, double value) {
-		property = property.toLowerCase();
-		if ("x".equals(property)) {
-			setX((int) value);
-		} else if ("y".equals(property)) {
-			setY((int) value);
-		} else if ("width".equals(property)) {
-			setWidth((int) value);
-		} else if ("height".equals(property)) {
-			setHeight((int) value);
-		} else if ("rotation".equals(property)) {
-			setRotation((int) value);
-		}
-	}
+	
 }
