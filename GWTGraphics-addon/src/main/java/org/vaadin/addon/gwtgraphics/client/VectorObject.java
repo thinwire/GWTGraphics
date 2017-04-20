@@ -15,9 +15,17 @@
  */
 package org.vaadin.addon.gwtgraphics.client;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.vaadin.addon.gwtgraphics.client.fill.Fill;
+import org.vaadin.addon.gwtgraphics.client.gradient.Gradient;
 import org.vaadin.addon.gwtgraphics.client.impl.SVGImpl;
+import org.vaadin.addon.gwtgraphics.client.stroke.Stroke;
+import org.vaadin.addon.gwtgraphics.client.transform.MatrixTransform;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -47,13 +55,64 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class VectorObject extends Widget implements HasClickHandlers,
 		HasAllMouseHandlers, HasDoubleClickHandlers {
-
-	private Widget parent;
-
+	
 	private static final SVGImpl impl = GWT.create(SVGImpl.class);
+	
+	private static enum FillType {
+		SOLID, GRADIENT
+	}
+	
+	private Widget parent;
+	
+	private Map<String, String> properties;
+	
+	private Stroke stroke;
+	private Fill fill;
+	private FillType fillType;
+	private Gradient fillGradient;
+	private MatrixTransform transform;
+
+	private double width, height;
+	private double posX, posY;
+	private double scaleX, scaleY;
+	private double rotation;
+	private boolean transformDirty;
 
 	public VectorObject() {
 		setElement(impl.createElement(getType()));
+		properties = new LinkedHashMap<String, String>();
+		
+		stroke = new Stroke("black");
+		fill = new Fill("white");
+		fillType = FillType.SOLID;
+		fillGradient = null;
+		
+		posX = 0;
+		posY = 0;
+		scaleX = 1;
+		scaleY = 1;
+		width = -1;
+		height = -1;
+		transformDirty = true;
+	}
+	
+	private MatrixTransform getTransform() {
+		if(transformDirty) {
+			
+			double rot = Math.toRadians(rotation);
+	        double ca = Math.cos(rot);
+			double sa = Math.sin(rot);
+			double a = (scaleX * ca);
+			double b = -(scaleY * sa);
+			double c = (scaleX * sa);
+			double d = (scaleY * ca);
+			double tx = posX;
+			double ty = posY;
+			
+			transform.set(a, b, c, d, tx, ty);
+			transformDirty = false;
+		}
+		return transform;
 	}
 
 	protected SVGImpl getImpl() {
@@ -61,19 +120,126 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 	}
 
 	protected abstract Class<? extends VectorObject> getType();
-
-	public int getRotation() {
-		return getImpl().getRotation(getElement());
+	
+	/**
+	 * Get SVG name of the element that this VectorObject represents
+	 *
+	 * @return a string like 'line' or 'rect' or whatever
+	 */
+	protected abstract String getSVGElementName();
+	
+	/**
+	 * Re-create the attributes of this VectorObject
+	 * 
+	 * TODO: make sure this is used everywhere it can be
+	 */
+	public void redraw() {
+		Element e = getElement();
+		MatrixTransform transform = getTransform();
+		
+		for(String property : properties.keySet()) {
+			String value = properties.get(property);
+			e.setAttribute(property, value);
+		}
+		
+		e.setAttribute("transform", transform.toSVGString());
 	}
 
-	public void setRotation(int degree) {
-		getImpl().setRotation(getElement(), degree, isAttached());
+	public String getProperty(String pname) {
+		return getProperty(pname, null);
+	}
+	
+	public double getPropertyDouble(String pname) {
+		return getPropertyDouble(pname, 0.0);
+	}
+	
+	public double getPropertyDouble(String pname, double defaultValue) {
+		String p = getProperty(pname, null);
+		if(p != null) {
+			return Double.parseDouble(p);
+		}
+		return defaultValue;
+	}
+	
+	public String getProperty(String pname, String defaultValue) {
+		String value = properties.get(pname);
+		if (value == null) {
+			return defaultValue;
+		}
+		return value;
+	}
+
+	public void setProperty(String pname, String pvalue) {
+		if (pvalue == null || pvalue.isEmpty()) {
+			properties.remove(pname);
+		} else {
+			properties.put(pname, pvalue);
+		}
+	}
+	
+	public void setProperty(String pname, double pvalue) {
+		setPropertyDouble(pname,pvalue);
+	}
+	
+	public void setPropertyDouble(String pname, double pvalue) {
+		setProperty(pname, "" + pvalue);
+	}
+	
+	public void setSize(double width, double height) {
+		this.width = width;
+		this.height = height;
+	}
+	
+	public double getWidth() {
+		return width;
+	}
+	
+	public double getHeight() {
+		return height;
+	}
+	
+	public void setPosition(double x, double y) {
+		posX = x;
+		posY = y;
+		transformDirty = true;
+	}
+	
+	public double getX() {
+		return posX;
+	}
+	
+	public double getY() {
+		return posY;
+	}
+	
+	public void setScale(double sx, double sy) {
+		scaleX = sx;
+		scaleY = sy;
+		transformDirty = true;
+	}
+	
+	public double getScaleX() {
+		return scaleX;
+	}
+	
+	public double getScaleY() {
+		return scaleY;
+	}
+	
+	public double getRotation() {
+		return rotation;
+	}
+
+	public void setRotation(double degree) {
+		this.rotation = degree;
+		transformDirty = true;
 	}
 
 	public Widget getParent() {
 		return parent;
 	}
 
+	// TODO, XXX: override failure - someone please investigate
 	public void setParent(Widget parent) {
 		Widget oldParent = this.parent;
 		if (parent == null) {
@@ -102,19 +268,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 	public void setStyleName(String style) {
 		getImpl().setStyleName(getElement(), style);
 	}
-
-	@Override
-	public void setHeight(String height) {
-		throw new UnsupportedOperationException(
-				"VectorObject doesn't support setHeight");
-	}
-
-	@Override
-	public void setWidth(String width) {
-		throw new UnsupportedOperationException(
-				"VectorObject doesn't support setWidth");
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -223,4 +377,5 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 	protected void onDetach() {
 		super.onDetach();
 	}
+	
 }
