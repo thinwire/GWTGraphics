@@ -1,10 +1,10 @@
-package org.vaadin.addon.gwtgraphics.client;
+package org.vaadin.addon.gwtgraphics.client.gradient;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Transform {
+public class GradientTransform {
 
 	public enum TransformType {
 		ROTATE,
@@ -18,7 +18,7 @@ public class Transform {
 	private TransformType type;
 	private List<Double> values = new ArrayList<Double>();
 	
-	private Transform(TransformType type, double... values) {
+	private GradientTransform(TransformType type, double... values) {
 		this.type = type;
 		for(double v : values) {
 			this.values.add(v);
@@ -47,32 +47,32 @@ public class Transform {
 		return "rotate";
 	}
 	
-	public static Transform rotation(double amount) {
-		return new Transform(TransformType.ROTATE, amount); 
+	public static GradientTransform rotation(double amount) {
+		return new GradientTransform(TransformType.ROTATE, amount); 
 	}
 	
-	public static Transform translation(double xamount, double yamount) {
-		return new Transform(TransformType.TRANSLATE, xamount, yamount);
+	public static GradientTransform translation(double xamount, double yamount) {
+		return new GradientTransform(TransformType.TRANSLATE, xamount, yamount);
 	}
 	
-	public static Transform scaling(double amount) {
-		return new Transform(TransformType.SCALE, amount);
+	public static GradientTransform scaling(double amount) {
+		return new GradientTransform(TransformType.SCALE, amount);
 	}
 	
-	public static Transform scaling(double xamount, double yamount) {
-		return new Transform(TransformType.SCALE, xamount, yamount);
+	public static GradientTransform scaling(double xamount, double yamount) {
+		return new GradientTransform(TransformType.SCALE, xamount, yamount);
 	}
 	
-	public static Transform skewX(double amount) {
-		return new Transform(TransformType.SKEW_X, amount);
+	public static GradientTransform skewX(double amount) {
+		return new GradientTransform(TransformType.SKEW_X, amount);
 	}
 	
-	public static Transform skewY(double amount) {
-		return new Transform(TransformType.SKEW_Y, amount);
+	public static GradientTransform skewY(double amount) {
+		return new GradientTransform(TransformType.SKEW_Y, amount);
 	}
 	
-	public static Transform matrix(double a, double b, double c, double d, double tx, double ty) {
-		return new Transform(TransformType.MATRIX, a, b, c, d, tx, ty);
+	public static GradientTransform matrix(double a, double b, double c, double d, double tx, double ty) {
+		return new GradientTransform(TransformType.MATRIX, a, b, c, d, tx, ty);
 	}
 	
 	/**
