@@ -49,27 +49,20 @@ public class RectangleEditor extends ShapeEditor {
 		CodeView code = getCodeView();
 		if (sender == width) {
 			try {
-				rect.setWidth(Integer.parseInt(width.getText()));
-				code.addMethodCall(vo, "setWidth", width.getText());
+				rect.setSize(Integer.parseInt(width.getText()), rect.getHeight());
+				code.addMethodCall(vo, "setWidth", width.getText()); // TODO: fix
 			} catch (NumberFormatException e) {
 			}
 			width.setText("" + rect.getWidth());
 		} else if (sender == height) {
 			try {
-				rect.setHeight(Integer.parseInt(height.getText()));
-				code.addMethodCall(vo, "setHeight", height.getText());
+				rect.setSize(rect.getWidth(), Integer.parseInt(height.getText()));
+				code.addMethodCall(vo, "setHeight", height.getText()); // TODO: fix
 			} catch (NumberFormatException e) {
 			}
 			height.setText("" + rect.getHeight());
 		} else if (sender == roundedCorners) {
-			try {
-				rect.setRoundedCorners(Integer.parseInt(roundedCorners
-						.getText()));
-				code.addMethodCall(vo, "setRoundedCorners",
-						roundedCorners.getText());
-			} catch (NumberFormatException e) {
-			}
-			roundedCorners.setText("" + rect.getRoundedCorners());
+			// TODO: nope
 		}
 	}
 }

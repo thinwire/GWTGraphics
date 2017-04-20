@@ -41,15 +41,15 @@ public class EllipseEditor extends ShapeEditor {
 		CodeView code = getCodeView();
 		if (sender == radiusX) {
 			try {
-				ellipse.setRadiusX(Integer.parseInt(radiusX.getText()));
-				code.addMethodCall(ellipse, "setRadiusX", ellipse.getRadiusX());
+				ellipse.setRadius(Integer.parseInt(radiusX.getText()), ellipse.getRadiusY());
+				code.addMethodCall(ellipse, "setRadiusX", ellipse.getRadiusX());		// TODO: fix this
 			} catch (NumberFormatException e) {
 			}
 			radiusX.setText("" + ellipse.getRadiusX());
 		} else if (sender == radiusY) {
 			try {
-				ellipse.setRadiusY(Integer.parseInt(radiusY.getText()));
-				code.addMethodCall(ellipse, "setRadiusY", ellipse.getRadiusY());
+				ellipse.setRadius(ellipse.getRadiusX(), Integer.parseInt(radiusY.getText()));
+				code.addMethodCall(ellipse, "setRadiusY", ellipse.getRadiusY());		// TODO: fix this
 			} catch (NumberFormatException e) {
 			}
 			radiusY.setText("" + ellipse.getRadiusY());

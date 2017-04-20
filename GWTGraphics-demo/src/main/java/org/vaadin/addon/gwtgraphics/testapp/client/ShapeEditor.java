@@ -32,6 +32,8 @@ public class ShapeEditor extends VectorObjectEditor {
 		strokeColor = addTextBoxRow("Stroke color", 8);
 		strokeWidth = addTextBoxRow("Stroke width", 8);
 		strokeOpacity = addTextBoxRow("Stroke opacity", 8);
+		
+		// TODO: add support for stipple, gradient, etc.
 
 		animatableEditor = new AnimatableEditor(metadata);
 		animatableEditor.addProperties(new String[] { "x", "y", "fillopacity",
@@ -41,11 +43,15 @@ public class ShapeEditor extends VectorObjectEditor {
 		if (vo != null) {
 			xCoord.setText("" + vo.getX());
 			yCoord.setText("" + vo.getY());
+			/*
+			 * TODO: API changed, use new object-oriented API
+			 * 
 			fillColor.setText(vo.getFillColor());
 			fillOpacity.setText("" + vo.getFillOpacity());
 			strokeColor.setText(vo.getStrokeColor());
 			strokeWidth.setText("" + vo.getStrokeWidth());
 			strokeOpacity.setText("" + vo.getStrokeOpacity());
+			*/
 		}
 	}
 
@@ -61,18 +67,23 @@ public class ShapeEditor extends VectorObjectEditor {
 		CodeView code = getCodeView();
 		if (sender == xCoord) {
 			try {
-				shape.setX(Integer.parseInt(xCoord.getText()));
+				shape.setPosition(Integer.parseInt(xCoord.getText()), shape.getY());
 				metadata.getCodeView().addMethodCall(vo, "setX", shape.getX());
 			} catch (NumberFormatException e) {
 			}
 			xCoord.setText("" + shape.getX());
 		} else if (sender == yCoord) {
 			try {
-				shape.setY(Integer.parseInt(yCoord.getText()));
+				shape.setPosition(shape.getX(), Integer.parseInt(yCoord.getText()));
 				metadata.getCodeView().addMethodCall(vo, "setY", shape.getY());
 			} catch (NumberFormatException e) {
 			}
 			yCoord.setText("" + shape.getY());
+		}
+		
+		/*
+		 * TODO: this entire API has changed, use object-oriented API
+		 * 
 		} else if (sender == fillColor) {
 			shape.setFillColor(fillColor.getText());
 			code.addMethodCall(vo, "setFillColor", shape.getFillColor());
@@ -105,5 +116,6 @@ public class ShapeEditor extends VectorObjectEditor {
 			}
 			strokeOpacity.setText("" + shape.getStrokeOpacity());
 		}
+		*/
 	}
 }

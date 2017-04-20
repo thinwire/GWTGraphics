@@ -28,26 +28,23 @@ public class LineEditor extends VectorObjectEditor {
 
 		animatableEditor = new AnimatableEditor(metadata);
 		animatableEditor.setTarget(line);
-		animatableEditor.addProperties(new String[] { "x1", "y1", "x2", "y2",
+		animatableEditor.addProperties(new String[] { "x0", "y0", "x1", "y1",
 				"strokeopacity", "strokewidth", "rotation" });
 		addRow("Animation", animatableEditor);
 
-		x1Coord = addTextBoxRow("X1", 3);
-		y1Coord = addTextBoxRow("Y1", 3);
-		x2Coord = addTextBoxRow("X2", 3);
-		y2Coord = addTextBoxRow("Y2", 3);
+		x1Coord = addTextBoxRow("X0", 3);
+		y1Coord = addTextBoxRow("Y0", 3);
+		x2Coord = addTextBoxRow("X1", 3);
+		y2Coord = addTextBoxRow("Y1", 3);
 		strokeColor = addTextBoxRow("Stroke color", 8);
 		strokeWidth = addTextBoxRow("Stroke width", 8);
 		strokeOpacity = addTextBoxRow("Stroke opacity", 8);
 
 		if (vo != null) {
-			x1Coord.setText("" + line.getX1());
-			y1Coord.setText("" + line.getY1());
-			x2Coord.setText("" + line.getX2());
-			y2Coord.setText("" + line.getY2());
-			strokeColor.setText(line.getStrokeColor());
-			strokeWidth.setText("" + line.getStrokeWidth());
-			strokeOpacity.setText("" + line.getStrokeOpacity());
+			x1Coord.setText("" + line.getX0());
+			y1Coord.setText("" + line.getY0());
+			x2Coord.setText("" + line.getX1());
+			y2Coord.setText("" + line.getY1());
 		}
 	}
 
@@ -63,32 +60,37 @@ public class LineEditor extends VectorObjectEditor {
 		CodeView code = getCodeView();
 		if (sender == x1Coord) {
 			try {
-				line.setX1(Integer.parseInt(x1Coord.getText()));
-				code.addMethodCall(line, "setX1", line.getX1());
+				line.setStartPosition(Integer.parseInt(x1Coord.getText()), line.getY0());
+				code.addMethodCall(line, "setX0", line.getX0());	// TODO: fix
 			} catch (NumberFormatException e) {
 			}
-			x1Coord.setText("" + line.getX1());
+			x1Coord.setText("" + line.getX0());
 		} else if (sender == y1Coord) {
 			try {
-				line.setY1(Integer.parseInt(y1Coord.getText()));
-				code.addMethodCall(line, "setY1", line.getY1());
+				line.setStartPosition(line.getX0(), Integer.parseInt(y1Coord.getText()));
+				code.addMethodCall(line, "setY0", line.getY0());	// TODO: fix
 			} catch (NumberFormatException e) {
 			}
-			y1Coord.setText("" + line.getY1());
+			y1Coord.setText("" + line.getY0());
 		} else if (sender == x2Coord) {
 			try {
-				line.setX2(Integer.parseInt(x2Coord.getText()));
-				code.addMethodCall(line, "setX2", line.getX2());
+				line.setEndPosition(Integer.parseInt(x2Coord.getText()), line.getY1());
+				code.addMethodCall(line, "setX1", line.getX1());	// TODO: fix
 			} catch (NumberFormatException e) {
 			}
-			x2Coord.setText("" + line.getX2());
+			x2Coord.setText("" + line.getX1());
 		} else if (sender == y2Coord) {
 			try {
-				line.setY2(Integer.parseInt(y2Coord.getText()));
-				code.addMethodCall(line, "setY2", line.getY2());
+				line.setEndPosition(line.getX1(), Integer.parseInt(y2Coord.getText()));
+				code.addMethodCall(line, "setY1", line.getY1());	// TODO: fix
 			} catch (NumberFormatException e) {
 			}
-			y2Coord.setText("" + line.getY2());
+			y2Coord.setText("" + line.getY1());
+		}
+			
+		/*
+		 * TODO: this entire API has changed, use the object API
+		 * 
 		} else if (sender == strokeColor) {
 			line.setStrokeColor(strokeColor.getText());
 			code.addMethodCall(line, "setStrokeColor", line.getStrokeColor());
@@ -111,6 +113,7 @@ public class LineEditor extends VectorObjectEditor {
 			}
 			strokeOpacity.setText("" + line.getStrokeOpacity());
 		}
+		*/
 	}
 
 }

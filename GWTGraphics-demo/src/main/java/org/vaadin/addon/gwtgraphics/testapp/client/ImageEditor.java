@@ -60,29 +60,29 @@ public class ImageEditor extends VectorObjectEditor {
 		CodeView code = getCodeView();
 		if (sender == xCoord) {
 			try {
-				image.setX(Integer.parseInt(xCoord.getText()));
-				code.addMethodCall(vo, "setX", image.getX());
+				image.setPosition(Integer.parseInt(xCoord.getText()), image.getY());
+				code.addMethodCall(vo, "setX", image.getX()); // TODO: fix
 			} catch (NumberFormatException e) {
 			}
 			xCoord.setText("" + image.getX());
 		} else if (sender == yCoord) {
 			try {
-				image.setY(Integer.parseInt(yCoord.getText()));
-				code.addMethodCall(vo, "setY", image.getY());
+				image.setPosition(image.getX(), Integer.parseInt(yCoord.getText()));
+				code.addMethodCall(vo, "setY", image.getY()); // TODO: fix
 			} catch (NumberFormatException e) {
 			}
 			yCoord.setText("" + image.getY());
 		} else if (sender == width) {
 			try {
-				image.setWidth(Integer.parseInt(width.getText()));
-				code.addMethodCall(vo, "setWidth", width.getText());
+				image.setSize(Integer.parseInt(width.getText()), image.getHeight());
+				code.addMethodCall(vo, "setWidth", width.getText()); // TODO: fix
 			} catch (NumberFormatException e) {
 			}
 			width.setText("" + image.getWidth());
 		} else if (sender == height) {
 			try {
-				image.setHeight(Integer.parseInt(height.getText()));
-				code.addMethodCall(vo, "setHeight", height.getText());
+				image.setSize(image.getWidth(), Integer.parseInt(height.getText()));
+				code.addMethodCall(vo, "setHeight", height.getText());	// TODO: fix
 			} catch (NumberFormatException e) {
 			}
 			height.setText("" + image.getHeight());
