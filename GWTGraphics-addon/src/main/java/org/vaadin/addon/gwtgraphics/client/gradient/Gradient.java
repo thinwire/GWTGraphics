@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.vaadin.addon.gwtgraphics.client.Transform;
+import org.vaadin.addon.gwtgraphics.client.transform.Transform;
 
 /**
  * Base gradient class
@@ -29,7 +29,7 @@ public abstract class Gradient {
 	private Map<String, String> parameters;
 	private Transform transform;
 
-	Gradient(String typeName) {
+	public Gradient(String typeName) {
 		id = "gradient_" + (++INSTANCE_COUNTER);
 		this.typeName = typeName;
 		stops = new LinkedHashSet<GradientStop>();
