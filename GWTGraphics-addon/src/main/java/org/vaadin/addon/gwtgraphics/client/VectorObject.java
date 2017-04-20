@@ -128,6 +128,40 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 	 */
 	protected abstract String getSVGElementName();
 	
+	public void setStroke(Stroke s) {
+		if(s != null) {
+			stroke = s;
+		}
+	}
+	
+	public Stroke getStroke() {
+		return stroke;
+	}
+	
+	public void setFill(Fill f) {
+		fillType = FillType.SOLID;
+		fill = f;
+		fillGradient = null;
+	}
+	
+	public void setFill(Gradient g) {
+		fillType = FillType.GRADIENT;
+		fillGradient = g;
+		fill = null;
+	}
+	
+	public FillType getFillType() {
+		return fillType;
+	}
+	
+	public Gradient getGradientFill() {
+		return fillGradient;
+	}
+	
+	public Fill getFill() {
+		return fill;
+	}
+	
 	/**
 	 * Re-create the attributes of this VectorObject
 	 * 
@@ -140,6 +174,28 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 		for(String property : properties.keySet()) {
 			String value = properties.get(property);
 			e.setAttribute(property, value);
+		}
+		
+		if(fillType == FillType.SOLID) {
+			String[] fillAttrs = fill.toSVGString().split(" ");
+			for(String a : fillAttrs) {
+				String[] parts = a.split("=\"");
+				String name = parts[0];
+				String value = parts[1].substring(0, parts[1].indexOf("\""));
+				e.setAttribute(name, value);
+			}
+		} else if(fillType == FillType.GRADIENT) {
+			e.setAttribute("fill", "url(#" + fillGradient.getId() + ")");
+		} else {
+			// wtf?!
+			assert false : "this should not happen";
+		}
+		
+		if(width > -1) {
+			e.setAttribute("width", "" + width);
+		}
+		if(height > -1) {
+			e.setAttribute("height", "" + height);
 		}
 		
 		e.setAttribute("transform", transform.toSVGString());

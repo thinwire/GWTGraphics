@@ -32,11 +32,11 @@ public class Fill {
 	}
 	
 	public String toSVGString() {
-		String value = "fill=\"" + style + "\"";
+		String s = "fill=\"" + style + "\"";
 		if(opacity != 1.0) {
-			value += " fill-opacity=\"" + opacity + "\"";
+			s += " fill-opacity=\"" + opacity + "\"";
 		}
-		return value;
+		return s;
 	}
 	
 }

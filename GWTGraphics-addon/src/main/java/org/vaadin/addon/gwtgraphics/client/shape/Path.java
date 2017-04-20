@@ -82,6 +82,9 @@ public class Path extends Shape implements Cloneable {
 
 	protected final List<PathStep> steps;
 
+	private boolean antialias = true;
+
+	
 	/**
 	 * Creates a new Path and sets its starting point at the given position.
 	 * 
@@ -94,7 +97,7 @@ public class Path extends Shape implements Cloneable {
 		this(10);
 		moveTo(x, y);
 	}
-
+	
 	/**
 	 * Creates an empty path with initial path step capacity. Useful when
 	 * cloning the path. Only to be used by cloning and extended classes when
@@ -105,6 +108,7 @@ public class Path extends Shape implements Cloneable {
 	 */
 	protected Path(int capacity) {
 		steps = new ArrayList<PathStep>(capacity);
+		setAntialising(true);
 	}
 
 	/**
@@ -123,6 +127,19 @@ public class Path extends Shape implements Cloneable {
 		
 	}
 
+	public void setAntialising(boolean enable) {
+		antialias = enable;
+		if(enable) {
+			setProperty("shape-rendering", "geometricPrecision");
+		} else {
+			setProperty("shape-rendering", "crispEdges");
+		}
+	}
+	
+	public boolean isAntialiasingEnabled() {
+		return antialias;
+	}
+	
 	@Override
 	protected Class<? extends VectorObject> getType() {
 		return Path.class;
