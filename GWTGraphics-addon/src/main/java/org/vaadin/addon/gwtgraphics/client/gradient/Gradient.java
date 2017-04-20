@@ -1,9 +1,12 @@
 package org.vaadin.addon.gwtgraphics.client.gradient;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.vaadin.addon.gwtgraphics.client.Transform;
 
 /**
  * Base gradient class
@@ -24,6 +27,7 @@ public abstract class Gradient {
 	private String typeName;
 	private Set<GradientStop> stops;
 	private Map<String, String> parameters;
+	private Transform transform;
 
 	Gradient(String typeName) {
 		id = "gradient_" + (++INSTANCE_COUNTER);
@@ -85,6 +89,14 @@ public abstract class Gradient {
 		return value;
 	}
 
+	/**
+	 * Set a parameter. If pvalue is null, the parameter is removed.
+	 * 
+	 * @param pname
+	 *            name of parameter
+	 * @param pvalue
+	 *            value of parameter
+	 */
 	public void setParameter(String pname, String pvalue) {
 		if (pvalue == null || pvalue.isEmpty()) {
 			parameters.remove(pname);
@@ -93,10 +105,19 @@ public abstract class Gradient {
 		}
 	}
 
+	public void setTransform(Transform t) {
+		transform = t;
+	}
+
+	public Transform getTransform() {
+		return transform;
+	}
+
 	/**
 	 * Add a gradient stop
 	 * 
-	 * @param stop a GradientStop instance that should not be null
+	 * @param stop
+	 *            a GradientStop instance that should not be null
 	 */
 	public void addStop(GradientStop stop) {
 		assert stop != null : "GradientStop parameter should never be null";
@@ -106,7 +127,8 @@ public abstract class Gradient {
 	/**
 	 * Remove a previously added gradient stop
 	 * 
-	 * @param stop a GradientStop instance that should not be null
+	 * @param stop
+	 *            a GradientStop instance that should not be null
 	 */
 	public void removeStop(GradientStop stop) {
 		assert stop != null : "GradientStop parameter should never be null";
@@ -139,12 +161,25 @@ public abstract class Gradient {
 	 * @return an SVG string
 	 */
 	public String toSVGString() {
-		String tag = "<" + typeName + " id=\"" + getId() + "\" ";
+		String tag = "<" + typeName + " id=\"" + getId() + "\"";
 
-		for (String param : parameters.keySet()) {
-			String value = parameters.get(param);
-			tag += "param=\"" + value + "\" ";
+		Iterator<String> it = parameters.keySet().iterator();
+		if (it.hasNext()) {
+			tag += " ";
 		}
+		while (it.hasNext()) {
+			String param = it.next();
+			String value = parameters.get(param);
+			tag += param + "=\"" + value + "\"";
+			if (it.hasNext()) {
+				tag += " ";
+			}
+		}
+
+		if (transform != null) {
+			tag += "gradientTransform=\"" + transform.toSVGString() + "\"";
+		}
+
 		tag += ">";
 
 		for (GradientStop stop : stops) {
