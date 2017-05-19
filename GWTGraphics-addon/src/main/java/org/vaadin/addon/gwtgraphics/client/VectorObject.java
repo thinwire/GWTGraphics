@@ -254,6 +254,14 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 		return height;
 	}
 	
+	public void setX(double x) {
+		posX = x;
+	}
+	
+	public void setY(double y) {
+		posY = y;
+	}
+	
 	public void setPosition(double x, double y) {
 		posX = x;
 		posY = y;
