@@ -210,6 +210,7 @@ public class EditorPanel extends VerticalPanel implements ChangeHandler,
 			VectorObject vo = voEditor.getVectorObject();
 			voEditor.getVectorObjectContainer().add(vo);
 			setVectorObject(vo, false);
+			vo.redraw();
 		} else if (sender == remove) {
 			metadata.removeVectorObject(voEditor.getVectorObject());
 			setVectorObject(null, true);

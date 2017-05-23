@@ -5,7 +5,6 @@
 	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
 	<inherits name='org.vaadin.addon.gwtgraphics.GWTGraphics'/>
 	<entry-point class='org.vaadin.addon.gwtgraphics.testapp.client.Test'/>
-	<inherits name="com.vaadin.DefaultWidgetSet" />
 
     
 </module>
