@@ -22,6 +22,8 @@ import org.vaadin.addon.gwtgraphics.client.fill.Fill;
 import org.vaadin.addon.gwtgraphics.client.gradient.Gradient;
 import org.vaadin.addon.gwtgraphics.client.impl.SVGImpl;
 import org.vaadin.addon.gwtgraphics.client.stroke.Stroke;
+import org.vaadin.addon.gwtgraphics.client.stroke.Stroke.LineCap;
+import org.vaadin.addon.gwtgraphics.client.stroke.Stroke.LineJoin;
 import org.vaadin.addon.gwtgraphics.client.transform.MatrixTransform;
 
 import com.google.gwt.core.client.GWT;
@@ -50,22 +52,22 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * An abstract base class for drawing objects the DrawingArea can contain.
- * 
+ *
  * @author Henri Kerola
  */
 public abstract class VectorObject extends Widget implements HasClickHandlers,
-		HasAllMouseHandlers, HasDoubleClickHandlers {
-	
+HasAllMouseHandlers, HasDoubleClickHandlers {
+
 	private static final SVGImpl impl = GWT.create(SVGImpl.class);
-	
+
 	private static enum FillType {
 		SOLID, GRADIENT
 	}
-	
+
 	private Widget parent;
-	
+
 	private Map<String, String> properties;
-	
+
 	private Stroke stroke;
 	private Fill fill;
 	private FillType fillType;
@@ -81,12 +83,12 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 	public VectorObject() {
 		setElement(impl.createElement(getType()));
 		properties = new LinkedHashMap<String, String>();
-		
+
 		stroke = new Stroke("black");
 		fill = new Fill("white");
 		fillType = FillType.SOLID;
 		fillGradient = null;
-		
+
 		posX = 0;
 		posY = 0;
 		scaleX = 1;
@@ -95,12 +97,12 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 		height = -1;
 		transformDirty = true;
 	}
-	
+
 	private MatrixTransform getTransform() {
 		if(transformDirty) {
-			
+
 			double rot = Math.toRadians(rotation);
-	        double ca = Math.cos(rot);
+			double ca = Math.cos(rot);
 			double sa = Math.sin(rot);
 			double a = (scaleX * ca);
 			double b = -(scaleY * sa);
@@ -108,8 +110,11 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 			double d = (scaleY * ca);
 			double tx = posX;
 			double ty = posY;
-			
-			transform.set(a, b, c, d, tx, ty);
+			if(transform == null) {
+				transform = new MatrixTransform(a, b, c, d, tx, ty);
+			}else {
+				transform.set(a, b, c, d, tx, ty);
+			}
 			transformDirty = false;
 		}
 		return transform;
@@ -120,62 +125,62 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 	}
 
 	protected abstract Class<? extends VectorObject> getType();
-	
+
 	/**
 	 * Get SVG name of the element that this VectorObject represents
 	 *
 	 * @return a string like 'line' or 'rect' or whatever
 	 */
 	protected abstract String getSVGElementName();
-	
+
 	public void setStroke(Stroke s) {
 		if(s != null) {
 			stroke = s;
 		}
 	}
-	
+
 	public Stroke getStroke() {
 		return stroke;
 	}
-	
+
 	public void setFill(Fill f) {
 		fillType = FillType.SOLID;
 		fill = f;
 		fillGradient = null;
 	}
-	
+
 	public void setFill(Gradient g) {
 		fillType = FillType.GRADIENT;
 		fillGradient = g;
 		fill = null;
 	}
-	
+
 	public FillType getFillType() {
 		return fillType;
 	}
-	
+
 	public Gradient getGradientFill() {
 		return fillGradient;
 	}
-	
+
 	public Fill getFill() {
 		return fill;
 	}
-	
+
 	/**
 	 * Re-create the attributes of this VectorObject
-	 * 
+	 *
 	 * TODO: make sure this is used everywhere it can be
 	 */
 	public void redraw() {
 		Element e = getElement();
 		MatrixTransform transform = getTransform();
-		
+
 		for(String property : properties.keySet()) {
 			String value = properties.get(property);
 			e.setAttribute(property, value);
 		}
-		
+
 		if(fillType == FillType.SOLID) {
 			String[] fillAttrs = fill.toSVGString().split(" ");
 			for(String a : fillAttrs) {
@@ -190,25 +195,52 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 			// wtf?!
 			assert false : "this should not happen";
 		}
-		
+
+		if(stroke != null) {
+			e.setAttribute("stroke", stroke.getColor());
+			e.setAttribute("stroke-width", Double.toString(stroke.getLineWidth()));
+			e.setAttribute("stroke-opacity", Double.toString(stroke.getOpacity()));
+			e.setAttribute("stroke-miterlimit", Double.toString(stroke.getMiterLimit()));
+			LineCap cap = stroke.getLineCap();
+			if(cap != null) {
+				e.setAttribute("stroke-linecap", cap.toString().toLowerCase());
+			}
+			LineJoin join = stroke.getLineJoin();
+			if(join != null) {
+				e.setAttribute("stroke-linejoin", join.toString().toLowerCase());
+			}
+			double[] dashes = stroke.getDashArray();
+			if(dashes.length>0) {
+				String str = Double.toString(dashes[0]);
+				for(int i=1; i<dashes.length;i++) {
+					str += ',';
+					str += dashes[i];
+				}
+				e.setAttribute("stroke-dasharray", str);
+				if(stroke.getDashOffset() != 0.0){
+					e.setAttribute("stroke-dashoffset", Double.toString(stroke.getDashOffset()));
+				}
+			}
+		}
+
 		if(width > -1) {
 			e.setAttribute("width", "" + width);
 		}
 		if(height > -1) {
 			e.setAttribute("height", "" + height);
 		}
-		
+
 		e.setAttribute("transform", transform.toSVGString());
 	}
 
 	public String getProperty(String pname) {
 		return getProperty(pname, null);
 	}
-	
+
 	public double getPropertyDouble(String pname) {
 		return getPropertyDouble(pname, 0.0);
 	}
-	
+
 	public double getPropertyDouble(String pname, double defaultValue) {
 		String p = getProperty(pname, null);
 		if(p != null) {
@@ -216,7 +248,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 		}
 		return defaultValue;
 	}
-	
+
 	public String getProperty(String pname, String defaultValue) {
 		String value = properties.get(pname);
 		if (value == null) {
@@ -232,73 +264,74 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 			properties.put(pname, pvalue);
 		}
 	}
-	
+
 	public void setProperty(String pname, double pvalue) {
 		setPropertyDouble(pname,pvalue);
 	}
-	
+
 	public void setPropertyDouble(String pname, double pvalue) {
 		setProperty(pname, "" + pvalue);
 	}
-	
+
 	public void setSize(double width, double height) {
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	public double getWidth() {
 		return width;
 	}
-	
+
 	public double getHeight() {
 		return height;
 	}
-	
+
 	public void setX(double x) {
 		posX = x;
 	}
-	
+
 	public void setY(double y) {
 		posY = y;
 	}
-	
+
 	public void setPosition(double x, double y) {
 		posX = x;
 		posY = y;
 		transformDirty = true;
 	}
-	
+
 	public double getX() {
 		return posX;
 	}
-	
+
 	public double getY() {
 		return posY;
 	}
-	
+
 	public void setScale(double sx, double sy) {
 		scaleX = sx;
 		scaleY = sy;
 		transformDirty = true;
 	}
-	
+
 	public double getScaleX() {
 		return scaleX;
 	}
-	
+
 	public double getScaleY() {
 		return scaleY;
 	}
-	
+
 	public double getRotation() {
 		return rotation;
 	}
 
 	public void setRotation(double degree) {
-		this.rotation = degree;
+		rotation = degree;
 		transformDirty = true;
 	}
 
+	@Override
 	public Widget getParent() {
 		return parent;
 	}
@@ -310,8 +343,8 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 			if (oldParent != null && oldParent.isAttached()) {
 				onDetach();
 				assert !isAttached() : "Failure of "
-						+ this.getClass().getName()
-						+ " to call super.onDetach()";
+				+ this.getClass().getName()
+				+ " to call super.onDetach()";
 			}
 			this.parent = null;
 		} else {
@@ -323,7 +356,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 			if (parent.isAttached()) {
 				onAttach();
 				assert isAttached() : "Failure of " + this.getClass().getName()
-						+ " to call super.onAttach()";
+				+ " to call super.onAttach()";
 			}
 		}
 	}
@@ -332,10 +365,10 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 	public void setStyleName(String style) {
 		getImpl().setStyleName(getElement(), style);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.
 	 * google.gwt.event.dom.client.ClickHandler)
@@ -346,7 +379,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasDoubleClickHandlers#addDoubleClickHandler
 	 * (com.google.gwt.event.dom.client.DoubleClickHandler)
@@ -357,7 +390,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseDownHandlers#addMouseDownHandler
 	 * (com.google.gwt.event.dom.client.MouseDownHandler)
@@ -368,7 +401,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseUpHandlers#addMouseUpHandler(
 	 * com.google.gwt.event.dom.client.MouseUpHandler)
@@ -379,7 +412,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler
 	 * (com.google.gwt.event.dom.client.MouseOutHandler)
@@ -390,7 +423,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler
 	 * (com.google.gwt.event.dom.client.MouseOverHandler)
@@ -401,7 +434,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseMoveHandlers#addMouseMoveHandler
 	 * (com.google.gwt.event.dom.client.MouseMoveHandler)
@@ -412,7 +445,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseWheelHandlers#addMouseWheelHandler
 	 * (com.google.gwt.event.dom.client.MouseWheelHandler)
@@ -423,7 +456,7 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Widget#onAttach()
 	 */
 	@Override
@@ -434,12 +467,12 @@ public abstract class VectorObject extends Widget implements HasClickHandlers,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Widget#onDetach()
 	 */
 	@Override
 	protected void onDetach() {
 		super.onDetach();
 	}
-	
+
 }

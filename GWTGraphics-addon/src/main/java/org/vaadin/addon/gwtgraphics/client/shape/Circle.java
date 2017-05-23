@@ -64,7 +64,6 @@ public class Circle extends Shape {
 	 */
 	public void setRadius(double radius) {
 		setProperty("r", radius);
-		redraw();
 	}
 
 	@Override

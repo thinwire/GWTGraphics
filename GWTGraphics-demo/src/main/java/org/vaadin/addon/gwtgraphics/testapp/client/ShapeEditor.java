@@ -32,7 +32,7 @@ public class ShapeEditor extends VectorObjectEditor {
 		strokeColor = addTextBoxRow("Stroke color", 8);
 		strokeWidth = addTextBoxRow("Stroke width", 8);
 		strokeOpacity = addTextBoxRow("Stroke opacity", 8);
-		
+
 		// TODO: add support for stipple, gradient, etc.
 
 		animatableEditor = new AnimatableEditor(metadata);
@@ -45,13 +45,13 @@ public class ShapeEditor extends VectorObjectEditor {
 			yCoord.setText("" + vo.getY());
 			/*
 			 * TODO: API changed, use new object-oriented API
-			 * 
+			 *
 			fillColor.setText(vo.getFillColor());
 			fillOpacity.setText("" + vo.getFillOpacity());
 			strokeColor.setText(vo.getStrokeColor());
 			strokeWidth.setText("" + vo.getStrokeWidth());
 			strokeOpacity.setText("" + vo.getStrokeOpacity());
-			*/
+			 */
 		}
 	}
 
@@ -79,43 +79,39 @@ public class ShapeEditor extends VectorObjectEditor {
 			} catch (NumberFormatException e) {
 			}
 			yCoord.setText("" + shape.getY());
-		}
-		
-		/*
-		 * TODO: this entire API has changed, use object-oriented API
-		 * 
+
 		} else if (sender == fillColor) {
-			shape.setFillColor(fillColor.getText());
-			code.addMethodCall(vo, "setFillColor", shape.getFillColor());
-			fillColor.setText(shape.getFillColor());
+			shape.getFill().setStyle(fillColor.getText());
+			code.addMethodCall(vo, "setFillColor", shape.getFill().getStyle());
+			fillColor.setText(shape.getFill().getStyle());
 		} else if (sender == fillOpacity) {
 			try {
-				shape.setFillOpacity(Double.parseDouble(fillOpacity.getText()));
-				code.addMethodCall(vo, "setFillOpacity", shape.getFillOpacity());
+				shape.getFill().setOpacity(Double.parseDouble(fillOpacity.getText()));
+				code.addMethodCall(vo, "setFillOpacity", shape.getFill().getOpacity());
 			} catch (NumberFormatException e) {
 			}
-			fillOpacity.setText("" + shape.getFillOpacity());
+			fillOpacity.setText("" + shape.getFill().getOpacity());
 		} else if (sender == strokeColor) {
-			shape.setStrokeColor(strokeColor.getText());
-			code.addMethodCall(vo, "setStrokeColor", shape.getStrokeColor());
-			strokeColor.setText(shape.getStrokeColor());
+			shape.getStroke().setColor(strokeColor.getText());
+			code.addMethodCall(vo, "setStrokeColor", shape.getStroke().getColor());
+			strokeColor.setText(shape.getStroke().getColor());
 		} else if (sender == strokeWidth) {
 			try {
-				shape.setStrokeWidth(Integer.parseInt(strokeWidth.getText()));
-				code.addMethodCall(vo, "setStrokeWidth", shape.getStrokeWidth());
+				shape.getStroke().setLineWidth(Integer.parseInt(strokeWidth.getText()));
+				code.addMethodCall(vo, "setStrokeWidth", shape.getStroke().getLineWidth());
 			} catch (NumberFormatException e) {
 			}
-			strokeWidth.setText("" + shape.getStrokeWidth());
+			strokeWidth.setText("" + shape.getStroke().getLineWidth());
 		} else if (sender == strokeOpacity) {
 			try {
-				shape.setStrokeOpacity(Double.parseDouble(strokeOpacity
+				shape.getStroke().setOpacity(Double.parseDouble(strokeOpacity
 						.getText()));
 				code.addMethodCall(vo, "setStrokeOpacity",
-						shape.getStrokeOpacity());
+						shape.getStroke().getOpacity());
 			} catch (NumberFormatException e) {
 			}
-			strokeOpacity.setText("" + shape.getStrokeOpacity());
+			strokeOpacity.setText("" + shape.getStroke().getOpacity());
 		}
-		*/
+
 	}
 }

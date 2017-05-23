@@ -38,7 +38,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  * The code below creates a path drawing a 100 x 100 pixels rectangle at the
  * position (50, 50):
  * </p>
- * 
+ *
  * <pre>
  * Path path = new Path(50, 50);
  * path.lineRelativelyTo(100, 0);
@@ -46,16 +46,16 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  * path.lineRelativelyTo(-100, 0);
  * path.close();
  * </pre>
- * 
+ *
  * This rectangle is modified as a triangle with the following code:
- * 
+ *
  * <pre>
  * path.setStep(2, new LineTo(true, -50, 100));
  * path.removeStep(3);
  * </pre>
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
 public class Path extends Shape implements Cloneable {
 
@@ -84,10 +84,10 @@ public class Path extends Shape implements Cloneable {
 
 	private boolean antialias = true;
 
-	
+
 	/**
 	 * Creates a new Path and sets its starting point at the given position.
-	 * 
+	 *
 	 * @param x
 	 *            the x-coordinate position in pixels
 	 * @param y
@@ -97,12 +97,12 @@ public class Path extends Shape implements Cloneable {
 		this(10);
 		moveTo(x, y);
 	}
-	
+
 	/**
 	 * Creates an empty path with initial path step capacity. Useful when
 	 * cloning the path. Only to be used by cloning and extended classes when
 	 * number of steps is known.
-	 * 
+	 *
 	 * @param capacity
 	 *            inicial capacity of <code>steps</code> list.
 	 */
@@ -113,7 +113,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Performs deep copy of path.
-	 * 
+	 *
 	 * @return a cloned Path
 	 */
 	public Path clone() {
@@ -124,7 +124,7 @@ public class Path extends Shape implements Cloneable {
 			p.addStep(s.cloneStep());;
 		}
 		return p;
-		
+
 	}
 
 	public void setAntialising(boolean enable) {
@@ -135,11 +135,11 @@ public class Path extends Shape implements Cloneable {
 			setProperty("shape-rendering", "crispEdges");
 		}
 	}
-	
+
 	public boolean isAntialiasingEnabled() {
 		return antialias;
 	}
-	
+
 	@Override
 	protected Class<? extends VectorObject> getType() {
 		return Path.class;
@@ -147,7 +147,7 @@ public class Path extends Shape implements Cloneable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.vaadin.gwtgraphics.client.Shape#getX()
 	 */
 	@Override
@@ -169,7 +169,7 @@ public class Path extends Shape implements Cloneable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.vaadin.gwtgraphics.client.Shape#getY()
 	 */
 	@Override
@@ -182,9 +182,32 @@ public class Path extends Shape implements Cloneable {
 		steps.set(0, new MoveTo(false, x, y));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.vaadin.gwtgraphics.client.Shape#setX(int)
+	 */
+	@Override
+	public void setX(double x) {
+		steps.set(0, new MoveTo(false, x, getY()));
+		issueRedraw(false);
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.vaadin.gwtgraphics.client.Shape#setY(int)
+	 */
+	@Override
+	public void setY(double y) {
+		steps.set(0, new MoveTo(false, getX(), y));
+		issueRedraw(false);
+	}
+
 	/**
 	 * Sets PathStep at the specified position.
-	 * 
+	 *
 	 * @param index
 	 *            the index of the PathStep element to set
 	 * @param step
@@ -208,7 +231,7 @@ public class Path extends Shape implements Cloneable {
 	 * Inserts a new Step at the given Position. Shifts the element currently at
 	 * that position (if any) and any subsequent elements to the right (adds one
 	 * to their indices).
-	 * 
+	 *
 	 * @param index
 	 *            index position where to add new Step
 	 * @param step
@@ -240,7 +263,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Appends a new Step to the end of the Path.
-	 * 
+	 *
 	 * @param step
 	 *            new Step
 	 * @throws IllegalArgumentException
@@ -260,7 +283,7 @@ public class Path extends Shape implements Cloneable {
 	/**
 	 * Removes the PathStep element at the specified position. Shifts any
 	 * subsequent elements to the left.
-	 * 
+	 *
 	 * @param index
 	 *            the index of the PathStep element to removed
 	 */
@@ -271,7 +294,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Returns the number of PathSteps in this Path.
-	 * 
+	 *
 	 * @return the number of PathSteps in this Path.
 	 */
 	public int getStepCount() {
@@ -280,7 +303,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Returs current PathStep list
-	 * 
+	 *
 	 * @return list of path steps
 	 */
 	public List<PathStep> getSteps() {
@@ -289,7 +312,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Returns the PathStep element at the specified position.
-	 * 
+	 *
 	 * @param index
 	 *            index of element to return.
 	 * @return the PathStep element at the specified position.
@@ -300,7 +323,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Start a new sub-path at the given absolute point.
-	 * 
+	 *
 	 * @param x
 	 *            an absolute x-coordinate in pixels
 	 * @param y
@@ -313,7 +336,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Start a new sub-path at the given relative point.
-	 * 
+	 *
 	 * @param x
 	 *            a relative x-coordinate in pixels
 	 * @param y
@@ -326,7 +349,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Draw a line from the current point to the given absolute point.
-	 * 
+	 *
 	 * @param x
 	 *            an absolute x-coordinate in pixels
 	 * @param y
@@ -339,7 +362,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Draw a line from the current point to the given relative point.
-	 * 
+	 *
 	 * @param x
 	 *            a relative x-coordinate in pixels
 	 * @param y
@@ -352,7 +375,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Draws a cubic B�zier curve.
-	 * 
+	 *
 	 * @param x1
 	 * @param y1
 	 * @param x2
@@ -367,7 +390,7 @@ public class Path extends Shape implements Cloneable {
 
 	/**
 	 * Draws a cubic B�zier curve.
-	 * 
+	 *
 	 * @param x1
 	 * @param y1
 	 * @param x2
@@ -400,9 +423,10 @@ public class Path extends Shape implements Cloneable {
 		issueRedraw(false);
 	}
 
-	private void drawPath() {
+	@Override
+	public void redraw() {
 		getImpl().drawPath(getElement(), steps);
-		redraw();
+		super.redraw();
 	}
 
 	// TODO, XXX: get rid of this crap
@@ -412,7 +436,7 @@ public class Path extends Shape implements Cloneable {
 			Scheduler.get().scheduleFinally(new ScheduledCommand() {
 				public void execute() {
 					deferredDrawPending = false;
-					drawPath();
+					redraw();
 				}
 			});
 		}
@@ -422,7 +446,7 @@ public class Path extends Shape implements Cloneable {
 	 * Issues new redraw request. If {@link #redrawingType} is set
 	 * <code>DEFERRED</code>, a new deferred call is issued instead. Note that,
 	 * if there is already deferred request pending, a new one will be ignored.
-	 * 
+	 *
 	 * @param redrawIfManual
 	 *            if <code>true</code> path will be redraw even if
 	 *            {@link #redrawingType} is set to <code>MANUAL</code>
@@ -431,7 +455,7 @@ public class Path extends Shape implements Cloneable {
 		if (redrawingType == RedrawType.DEFERRED) {
 			drawPathDeferred();
 		} else if (redrawIfManual || redrawingType == RedrawType.AUTO) {
-			drawPath();
+			redraw();
 		}
 	}
 
