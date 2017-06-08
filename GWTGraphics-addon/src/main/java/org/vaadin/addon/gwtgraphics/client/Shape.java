@@ -15,17 +15,40 @@
  */
 package org.vaadin.addon.gwtgraphics.client;
 
-import org.vaadin.addon.gwtgraphics.client.animation.Animatable;
+import org.vaadin.addon.gwtgraphics.client.filter.Filter;
+
+import com.google.gwt.dom.client.Element;
 
 /**
  * Shape is an abstract upper-class for VectorObjects that support filling,
  * stroking and positioning.
- * 
+ *
  * TODO: JavaDoc no longer reflects reality
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
-public abstract class Shape extends VectorObject implements Animatable {
+public abstract class Shape extends VectorObject {
+
+	private Filter filter;
+
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+
+
+	@Override
+	public void redraw() {
+		super.redraw();
+		if(filter!=null) {
+			Element e = getElement();
+			e.setAttribute("filter", "url(#" + filter.getId() + ")");
+		}
+	}
+
 
 }

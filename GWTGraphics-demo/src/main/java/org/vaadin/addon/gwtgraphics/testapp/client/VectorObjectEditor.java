@@ -1,5 +1,6 @@
 package org.vaadin.addon.gwtgraphics.testapp.client;
 
+import org.vaadin.addon.gwtgraphics.client.DrawingArea;
 import org.vaadin.addon.gwtgraphics.client.VectorObject;
 import org.vaadin.addon.gwtgraphics.client.VectorObjectContainer;
 import org.vaadin.addon.gwtgraphics.testapp.client.components.NullableTextBox;
@@ -21,6 +22,8 @@ public class VectorObjectEditor extends FlexTable implements ChangeHandler {
 
 	private TextBox rotation;
 
+	private DashEditor dashEditor;
+
 	private boolean newVo;
 
 	public VectorObjectEditor(VectorObject vo, Metadata metadata, boolean newVo) {
@@ -40,6 +43,12 @@ public class VectorObjectEditor extends FlexTable implements ChangeHandler {
 		if (vo != null) {
 			rotation.setText("" + vo.getRotation());
 		}
+
+		dashEditor = new DashEditor();
+		if(vo!=null){
+			dashEditor.setTarget(vo);
+		}
+		addRow("Dash array", dashEditor);
 	}
 
 	protected TextBox addTextBoxRow(String caption, int visibleLength) {
@@ -79,6 +88,10 @@ public class VectorObjectEditor extends FlexTable implements ChangeHandler {
 
 	public VectorObjectContainer getVectorObjectContainer() {
 		return metadata.getParent(parentList.getSelectedIndex());
+	}
+
+	public DrawingArea getDrawingArea() {
+		return metadata.getDrawingArea();
 	}
 
 	protected CodeView getCodeView() {

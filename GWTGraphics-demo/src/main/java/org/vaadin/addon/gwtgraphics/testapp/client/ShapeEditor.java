@@ -5,7 +5,7 @@ import org.vaadin.addon.gwtgraphics.client.Shape;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.TextBox;
 
-public class ShapeEditor extends VectorObjectEditor {
+public class ShapeEditor extends VectorObjectEditor{
 
 	private TextBox xCoord;
 
@@ -23,6 +23,10 @@ public class ShapeEditor extends VectorObjectEditor {
 
 	protected AnimatableEditor animatableEditor;
 
+	private GradientEditor gradientEditor;
+
+	private FilterEditor filterEditor;
+
 	public ShapeEditor(Shape vo, Metadata metadata, boolean newVo) {
 		super(vo, metadata, newVo);
 		xCoord = addTextBoxRow("X", 3);
@@ -38,20 +42,29 @@ public class ShapeEditor extends VectorObjectEditor {
 		animatableEditor = new AnimatableEditor(metadata);
 		animatableEditor.addProperties(new String[] { "x", "y", "fillopacity",
 				"strokeopacity", "strokewidth", "rotation" });
+
 		addRow("Animation", animatableEditor);
+
+		gradientEditor = new GradientEditor();
+		gradientEditor.addProperties(new String[]{GradientEditor.LINEAR_GRADIENT, GradientEditor.RADIAL_GRADIENT});
+		gradientEditor.setTarget(vo);
+		addRow("Gradient", gradientEditor);
+
+		filterEditor = new FilterEditor();
+		filterEditor.setTarget(vo);
+		addRow("Filter", filterEditor);
 
 		if (vo != null) {
 			xCoord.setText("" + vo.getX());
 			yCoord.setText("" + vo.getY());
-			/*
-			 * TODO: API changed, use new object-oriented API
-			 *
-			fillColor.setText(vo.getFillColor());
-			fillOpacity.setText("" + vo.getFillOpacity());
-			strokeColor.setText(vo.getStrokeColor());
-			strokeWidth.setText("" + vo.getStrokeWidth());
-			strokeOpacity.setText("" + vo.getStrokeOpacity());
-			 */
+			if(vo.getFill() != null) {
+				fillColor.setText(vo.getFill().getStyle());
+				fillOpacity.setText("" + vo.getFill().getOpacity());
+			}
+			strokeColor.setText(vo.getStroke().getColor());
+			strokeWidth.setText("" + vo.getStroke().getLineWidth());
+			strokeOpacity.setText("" + vo.getStroke().getOpacity());
+
 		}
 	}
 
@@ -80,11 +93,11 @@ public class ShapeEditor extends VectorObjectEditor {
 			}
 			yCoord.setText("" + shape.getY());
 
-		} else if (sender == fillColor) {
+		} else if (sender == fillColor && shape.getFill()!=null) {
 			shape.getFill().setStyle(fillColor.getText());
 			code.addMethodCall(vo, "setFillColor", shape.getFill().getStyle());
 			fillColor.setText(shape.getFill().getStyle());
-		} else if (sender == fillOpacity) {
+		} else if (sender == fillOpacity && shape.getFill()!=null) {
 			try {
 				shape.getFill().setOpacity(Double.parseDouble(fillOpacity.getText()));
 				code.addMethodCall(vo, "setFillOpacity", shape.getFill().getOpacity());

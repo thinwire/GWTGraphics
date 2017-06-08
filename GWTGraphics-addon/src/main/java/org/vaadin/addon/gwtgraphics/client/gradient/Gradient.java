@@ -1,17 +1,23 @@
 package org.vaadin.addon.gwtgraphics.client.gradient;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.vaadin.addon.gwtgraphics.client.Definition;
+import org.vaadin.addon.gwtgraphics.client.impl.SVGImpl;
 import org.vaadin.addon.gwtgraphics.client.transform.Transform;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * Base gradient class
  */
-public abstract class Gradient {
+public abstract class Gradient implements Definition{
+
+
+	private static final SVGImpl impl = GWT.create(SVGImpl.class);
 
 	public static enum GradientUnits {
 		USER_SPACE_ON_USE, OBJECT_BOUNDING_BOX
@@ -24,14 +30,12 @@ public abstract class Gradient {
 	private static int INSTANCE_COUNTER = 0;
 
 	private String id;
-	private String typeName;
 	private Set<GradientStop> stops;
 	private Map<String, String> parameters;
 	private Transform transform;
 
-	public Gradient(String typeName) {
+	public Gradient() {
 		id = "gradient_" + (++INSTANCE_COUNTER);
-		this.typeName = typeName;
 		stops = new LinkedHashSet<GradientStop>();
 		parameters = new LinkedHashMap<String, String>();
 	}
@@ -62,7 +66,7 @@ public abstract class Gradient {
 
 	/**
 	 * Get current value of a previously set parameter
-	 * 
+	 *
 	 * @param pname
 	 *            name of parameter
 	 * @return a String value or null
@@ -74,7 +78,7 @@ public abstract class Gradient {
 	/**
 	 * Get the current value of a previously set parameter, or a default value
 	 * if no value is currently set
-	 * 
+	 *
 	 * @param pname
 	 *            name of parameter
 	 * @param defaultValue
@@ -91,7 +95,7 @@ public abstract class Gradient {
 
 	/**
 	 * Set a parameter. If pvalue is null, the parameter is removed.
-	 * 
+	 *
 	 * @param pname
 	 *            name of parameter
 	 * @param pvalue
@@ -115,7 +119,7 @@ public abstract class Gradient {
 
 	/**
 	 * Add a gradient stop
-	 * 
+	 *
 	 * @param stop
 	 *            a GradientStop instance that should not be null
 	 */
@@ -126,7 +130,7 @@ public abstract class Gradient {
 
 	/**
 	 * Remove a previously added gradient stop
-	 * 
+	 *
 	 * @param stop
 	 *            a GradientStop instance that should not be null
 	 */
@@ -135,10 +139,14 @@ public abstract class Gradient {
 		stops.remove(stop);
 	}
 
+	protected Set<GradientStop> getStops() {
+		return stops;
+	}
+
 	/**
 	 * Get the DOM ID associated with this Gradient. A value for this is
 	 * auto-generated.
-	 * 
+	 *
 	 * @return a unique ID string
 	 */
 	public String getId() {
@@ -147,47 +155,12 @@ public abstract class Gradient {
 
 	/**
 	 * Explicitly set the ID of this gradient. You should never need to do this.
-	 * 
+	 *
 	 * @param id
 	 *            a unique ID string
 	 */
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	/**
-	 * Generate an SVG string representing this Gradient
-	 * 
-	 * @return an SVG string
-	 */
-	public String toSVGString() {
-		String tag = "<" + typeName + " id=\"" + getId() + "\"";
-
-		Iterator<String> it = parameters.keySet().iterator();
-		if (it.hasNext()) {
-			tag += " ";
-		}
-		while (it.hasNext()) {
-			String param = it.next();
-			String value = parameters.get(param);
-			tag += param + "=\"" + value + "\"";
-			if (it.hasNext()) {
-				tag += " ";
-			}
-		}
-
-		if (transform != null) {
-			tag += "gradientTransform=\"" + transform.toSVGString() + "\"";
-		}
-
-		tag += ">";
-
-		for (GradientStop stop : stops) {
-			tag += stop.toSVGString();
-		}
-
-		tag += "</" + typeName + ">";
-		return tag;
 	}
 
 }

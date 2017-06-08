@@ -88,7 +88,7 @@ public class ImageEditor extends VectorObjectEditor {
 			height.setText("" + image.getHeight());
 		} else if (sender == href) {
 			image.setHref(href.getText());
-			height.setText(image.getHref());
+			href.setText(image.getHref());
 			code.addMethodCall(vo, "setHref", height.getText());
 		}
 	}
