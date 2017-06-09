@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.vaadin.addon.gwtgraphics.client.DrawingArea;
 import org.vaadin.addon.gwtgraphics.client.Group;
 import org.vaadin.addon.gwtgraphics.client.VectorObject;
 import org.vaadin.addon.gwtgraphics.client.VectorObjectContainer;
@@ -97,6 +98,9 @@ public class Metadata {
 		return list;
 	}
 
+	public DrawingArea getDrawingArea() {
+		return application.getDrawingArea();
+	}
 	public VectorObjectContainer getParent(int index) {
 		if (index == 0) {
 			return application.getDrawingArea();

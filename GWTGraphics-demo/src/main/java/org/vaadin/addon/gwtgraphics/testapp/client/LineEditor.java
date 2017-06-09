@@ -46,6 +46,7 @@ public class LineEditor extends VectorObjectEditor {
 			x2Coord.setText("" + line.getX1());
 			y2Coord.setText("" + line.getY1());
 		}
+		line.setProperty("shape-rendering", "geometricPrecision");
 	}
 
 	@Override
@@ -87,10 +88,10 @@ public class LineEditor extends VectorObjectEditor {
 			}
 			y2Coord.setText("" + line.getY1());
 		}
-			
+
 		/*
 		 * TODO: this entire API has changed, use the object API
-		 * 
+		 *
 		} else if (sender == strokeColor) {
 			line.setStrokeColor(strokeColor.getText());
 			code.addMethodCall(line, "setStrokeColor", line.getStrokeColor());
@@ -113,7 +114,7 @@ public class LineEditor extends VectorObjectEditor {
 			}
 			strokeOpacity.setText("" + line.getStrokeOpacity());
 		}
-		*/
+		 */
 	}
 
 }

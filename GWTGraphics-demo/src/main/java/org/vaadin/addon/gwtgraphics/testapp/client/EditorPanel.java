@@ -3,7 +3,9 @@ package org.vaadin.addon.gwtgraphics.testapp.client;
 import org.vaadin.addon.gwtgraphics.client.Group;
 import org.vaadin.addon.gwtgraphics.client.Image;
 import org.vaadin.addon.gwtgraphics.client.Line;
+import org.vaadin.addon.gwtgraphics.client.Shape;
 import org.vaadin.addon.gwtgraphics.client.VectorObject;
+import org.vaadin.addon.gwtgraphics.client.filter.Filter;
 import org.vaadin.addon.gwtgraphics.client.shape.Circle;
 import org.vaadin.addon.gwtgraphics.client.shape.Ellipse;
 import org.vaadin.addon.gwtgraphics.client.shape.Path;
@@ -24,7 +26,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class EditorPanel extends VerticalPanel implements ChangeHandler,
-		ClickHandler {
+ClickHandler {
 
 	private Metadata metadata;
 
@@ -79,7 +81,7 @@ public class EditorPanel extends VerticalPanel implements ChangeHandler,
 	}
 
 	private void setVectorObject(VectorObject vo, boolean newVo) {
-		if (this.voEditor != null) {
+		if (voEditor != null) {
 			remove(voEditor);
 			if (voEditor.getVectorObject().getParent() == null) {
 				metadata.removeVectorObject(voEditor.getVectorObject());
@@ -100,29 +102,29 @@ public class EditorPanel extends VerticalPanel implements ChangeHandler,
 		type.setEnabled(false);
 		action.setSelectedIndex(1); // edit selected
 
-		this.voEditor = null;
+		voEditor = null;
 		if (vo instanceof Rectangle) {
 			type.setSelectedIndex(1);
 			RectangleEditor editor = new RectangleEditor((Rectangle) vo,
 					metadata, newVo);
-			this.voEditor = editor;
+			voEditor = editor;
 		} else if (vo instanceof Circle) {
 			type.setSelectedIndex(2);
 			CircleEditor editor = new CircleEditor((Circle) vo, metadata, newVo);
-			this.voEditor = editor;
+			voEditor = editor;
 		} else if (vo instanceof Ellipse) {
 			type.setSelectedIndex(3);
 			EllipseEditor editor = new EllipseEditor((Ellipse) vo, metadata,
 					newVo);
-			this.voEditor = editor;
+			voEditor = editor;
 		} else if (vo instanceof Line) {
 			type.setSelectedIndex(4);
 			LineEditor editor = new LineEditor((Line) vo, metadata, newVo);
-			this.voEditor = editor;
+			voEditor = editor;
 		} else if (vo instanceof Image) {
 			type.setSelectedIndex(5);
 			ImageEditor editor = new ImageEditor((Image) vo, metadata, newVo);
-			this.voEditor = editor;
+			voEditor = editor;
 		} else if (vo instanceof Text) {
 			type.setSelectedIndex(6);
 			voEditor = new TextEditor((Text) vo, metadata, newVo);
@@ -209,6 +211,15 @@ public class EditorPanel extends VerticalPanel implements ChangeHandler,
 		if (sender == add) {
 			VectorObject vo = voEditor.getVectorObject();
 			voEditor.getVectorObjectContainer().add(vo);
+			if(vo.getGradientFill() != null) {
+				voEditor.getDrawingArea().add(vo.getGradientFill());
+			}
+			if( vo instanceof Shape) {
+				Filter f = ((Shape) vo).getFilter();
+				if(f!=null) {
+					voEditor.getDrawingArea().add(f);
+				}
+			}
 			setVectorObject(vo, false);
 			vo.redraw();
 		} else if (sender == remove) {
@@ -216,6 +227,10 @@ public class EditorPanel extends VerticalPanel implements ChangeHandler,
 			setVectorObject(null, true);
 		} else if (sender instanceof VectorObject) {
 			setVectorObject((VectorObject) sender, false);
+			if(((VectorObject) sender).getGradientFill() != null) {
+				voEditor.getDrawingArea().add(((VectorObject) sender).getGradientFill());
+			}
+			((VectorObject) sender).redraw();
 		} else {
 			setVectorObject(null, true);
 		}

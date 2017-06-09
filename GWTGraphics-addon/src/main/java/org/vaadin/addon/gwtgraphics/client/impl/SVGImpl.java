@@ -41,6 +41,8 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -48,12 +50,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * This class contains the SVG implementation module of GWT Graphics.
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
 public class SVGImpl {
-	
+
 	// TODO: get rid of all this crap
 
 	public String getRendererString() {
@@ -299,8 +301,8 @@ public class SVGImpl {
 	/**
 	 * Builds the string for single step Needed when appending step to the end
 	 * of path
-	 * @param element 
-	 * 
+	 * @param element
+	 *
 	 * @param step
 	 *            step which string we need
 	 * @return path step string
@@ -403,6 +405,17 @@ public class SVGImpl {
 
 	public void add(Element root, Element element, boolean attached) {
 		root.appendChild(element);
+	}
+
+	public void add(Element root, Element element) {
+		NodeList<Node> list = root.getChildNodes();
+		for(int i = 0; i<list.getLength(); i++ ) {
+			Node node = list.getItem(i);
+			if("defs".equals(node.getNodeName())) {
+				node.appendChild(element);
+				return;
+			}
+		}
 	}
 
 	public void insert(Element root, Element element, int beforeIndex,

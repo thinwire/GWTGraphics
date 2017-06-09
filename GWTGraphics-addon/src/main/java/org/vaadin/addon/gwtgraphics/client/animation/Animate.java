@@ -16,13 +16,14 @@
 package org.vaadin.addon.gwtgraphics.client.animation;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.core.client.GWT;
 
 /**
  * This class can be used to animate classes implementing the Animatable
  * interface.
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
 public class Animate {
 
@@ -42,6 +43,7 @@ public class Animate {
 		protected void onUpdate(double progress) {
 			double value = (endValue - startValue) * progress + startValue;
 			target.setPropertyDouble(property, value);
+			target.redraw();
 		}
 
 		@Override

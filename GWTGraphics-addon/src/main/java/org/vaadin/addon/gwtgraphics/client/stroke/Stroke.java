@@ -1,6 +1,7 @@
 package org.vaadin.addon.gwtgraphics.client.stroke;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,31 +36,29 @@ public class Stroke {
 		this.color = color == null ? "" : color;
 	}
 
-	public void setDashArray(double... values) {
-		if(dashArray != null) {
+	public void setDashArray(List<Double> values) {
+		if(dashArray == null) {
 			dashArray = new ArrayList<Double>();
 		}
 		dashArray.clear();
-		for(double d : values) {
-			dashArray.add(d);
-		}
+		dashArray.addAll(values);
+	}
+
+	public void setDashArray(Double... values) {
+		setDashArray(Arrays.asList(values));
+
 	}
 
 	/**
-	 * Returns a temporary array with the defined dash array values
+	 * Returns a temporary list with the defined dash array values
 	 *
 	 * @return
 	 */
-	public double[] getDashArray() {
+	public List<Double> getDashArray() {
 		if(dashArray == null) {
-			return new double[0];
+			return new ArrayList<Double>();
 		}
-		double[] values = new double[dashArray.size()];
-		int i = 0;
-		for(double d : dashArray) {
-			values[i++] = d;
-		}
-		return values;
+		return new ArrayList<Double>(dashArray);
 	}
 
 	public void setDashOffset(double offs) {

@@ -50,11 +50,11 @@ import com.google.gwt.user.client.ui.Widget;
  * The following example shows how a DrawingArea instance is created and added
  * to a GWT application. A rectangle is added to this DrawingArea instance. When
  * the user clicks this rectangle its color changes.
- * 
+ *
  * <pre>
  * DrawingArea canvas = new DrawingArea(200, 200);
  * RootPanel.get().add(canvas);
- * 
+ *
  * Rectangle rect = new Rectangle(10, 10, 100, 50);
  * canvas.add(rect);
  * rect.setFillColor(&quot;blue&quot;);
@@ -69,22 +69,23 @@ import com.google.gwt.user.client.ui.Widget;
  * 	}
  * });
  * </pre>
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
-public class DrawingArea extends Widget implements VectorObjectContainer,
-		HasClickHandlers, HasAllMouseHandlers, HasDoubleClickHandlers {
+public class DrawingArea extends Widget
+implements VectorObjectContainer, HasClickHandlers, HasAllMouseHandlers, HasDoubleClickHandlers {
 
 	private static final SVGImpl impl = GWT.create(SVGImpl.class);
 
 	private final Element root;
 
 	private List<VectorObject> childrens = new ArrayList<VectorObject>();
+	private List<Definition> definitions = new ArrayList<Definition>();
 
 	/**
 	 * Creates a DrawingArea of given width and height.
-	 * 
+	 *
 	 * @param width
 	 *            the width of DrawingArea in pixels
 	 * @param height
@@ -104,7 +105,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 	/**
 	 * Returns a String that indicates what graphics renderer is used. This
 	 * String is "VML" for Internet Explorer and "SVG" for other browsers.
-	 * 
+	 *
 	 * @return the used graphics renderer
 	 */
 	public String getRendererString() {
@@ -113,7 +114,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.vaadin.gwtgraphics.client.VectorObjectContainer#add(org.vaadin.
 	 * gwtgraphics.client.VectorObject)
 	 */
@@ -124,9 +125,15 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 		return vo;
 	}
 
+	public Definition add(Definition def) {
+		getImpl().add(root, def.getElement());
+		definitions.add(def);
+		return def;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.vaadin.gwtgraphics.client.VectorObjectContainer#insert(org.vaadin
 	 * .gwtgraphics.client.VectorObject, int)
@@ -149,7 +156,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.vaadin.gwtgraphics.client.VectorObjectContainer#bringToFront(org.
 	 * vaadin.gwtgraphics.client.VectorObject)
@@ -164,7 +171,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.vaadin.gwtgraphics.client.VectorObjectContainer#remove(org.vaadin
 	 * .gwtgraphics.client.VectorObject)
@@ -181,20 +188,20 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.vaadin.gwtgraphics.client.VectorObjectContainer#clear()
 	 */
 	public void clear() {
 		List<VectorObject> childrensCopy = new ArrayList<VectorObject>();
 		childrensCopy.addAll(childrens);
 		for (VectorObject vo : childrensCopy) {
-			this.remove(vo);
+			remove(vo);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.vaadin.gwtgraphics.client.VectorObjectContainer#getVectorObject(int)
 	 */
@@ -204,7 +211,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.vaadin.gwtgraphics.client.VectorObjectContainer#getVectorObjectCount
 	 * ()
@@ -215,7 +222,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/**
 	 * Returns the width of the DrawingArea in pixels.
-	 * 
+	 *
 	 * @return the width of the DrawingArea in pixels.
 	 */
 	public int getWidth() {
@@ -224,7 +231,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/**
 	 * Sets the width of the DrawingArea in pixels.
-	 * 
+	 *
 	 * @param width
 	 *            the new width in pixels
 	 */
@@ -234,7 +241,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/**
 	 * Returns the height of the DrawingArea in pixels.
-	 * 
+	 *
 	 * @return the height of the DrawingArea in pixels.
 	 */
 	public int getHeight() {
@@ -243,7 +250,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/**
 	 * Sets the height of the DrawingArea in pixels.
-	 * 
+	 *
 	 * @param height
 	 *            the new height
 	 */
@@ -253,7 +260,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
 	 */
 	@Override
@@ -261,21 +268,19 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 		boolean successful = false;
 		if (height != null && height.endsWith("px")) {
 			try {
-				setHeight(Integer.parseInt(height.substring(0,
-						height.length() - 2)));
+				setHeight(Integer.parseInt(height.substring(0, height.length() - 2)));
 				successful = true;
 			} catch (NumberFormatException e) {
 			}
 		}
 		if (!successful) {
-			throw new IllegalArgumentException(
-					"Only pixel units (px) are supported");
+			throw new IllegalArgumentException("Only pixel units (px) are supported");
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
 	 */
 	@Override
@@ -283,33 +288,30 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 		boolean successful = false;
 		if (width != null && width.endsWith("px")) {
 			try {
-				setWidth(Integer
-						.parseInt(width.substring(0, width.length() - 2)));
+				setWidth(Integer.parseInt(width.substring(0, width.length() - 2)));
 				successful = true;
 			} catch (NumberFormatException e) {
 			}
 		}
 		if (!successful) {
-			throw new IllegalArgumentException(
-					"Only pixel units (px) are supported");
+			throw new IllegalArgumentException("Only pixel units (px) are supported");
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.user.client.ui.UIObject#setStyleName(java.lang.String)
 	 */
 	@Override
 	public void setStyleName(String style) {
-		getElement().setClassName(
-				style + " " + style + "-" + getImpl().getStyleSuffix());
+		getElement().setClassName(style + " " + style + "-" + getImpl().getStyleSuffix());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.
 	 * google.gwt.event.dom.client.ClickHandler)
@@ -320,9 +322,9 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.event.dom.client.HasDoubleClickHandlers#addDoubleClickHandler
+	 *
+	 * @see com.google.gwt.event.dom.client.HasDoubleClickHandlers#
+	 * addDoubleClickHandler
 	 * (com.google.gwt.event.dom.client.DoubleClickHandler)
 	 */
 	public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
@@ -331,7 +333,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseDownHandlers#addMouseDownHandler
 	 * (com.google.gwt.event.dom.client.MouseDownHandler)
@@ -342,7 +344,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseUpHandlers#addMouseUpHandler(
 	 * com.google.gwt.event.dom.client.MouseUpHandler)
@@ -353,7 +355,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler
 	 * (com.google.gwt.event.dom.client.MouseOutHandler)
@@ -364,7 +366,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler
 	 * (com.google.gwt.event.dom.client.MouseOverHandler)
@@ -375,7 +377,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.google.gwt.event.dom.client.HasMouseMoveHandlers#addMouseMoveHandler
 	 * (com.google.gwt.event.dom.client.MouseMoveHandler)
@@ -386,10 +388,9 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.event.dom.client.HasMouseWheelHandlers#addMouseWheelHandler
-	 * (com.google.gwt.event.dom.client.MouseWheelHandler)
+	 *
+	 * @see com.google.gwt.event.dom.client.HasMouseWheelHandlers#
+	 * addMouseWheelHandler (com.google.gwt.event.dom.client.MouseWheelHandler)
 	 */
 	public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
 		return addDomHandler(handler, MouseWheelEvent.getType());
@@ -397,7 +398,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Widget#doAttachChildren()
 	 */
 	@Override
@@ -409,7 +410,7 @@ public class DrawingArea extends Widget implements VectorObjectContainer,
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Widget#doDetachChildren()
 	 */
 	@Override

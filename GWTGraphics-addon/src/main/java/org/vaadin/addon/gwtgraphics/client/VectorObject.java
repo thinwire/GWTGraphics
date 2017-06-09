@@ -16,8 +16,10 @@
 package org.vaadin.addon.gwtgraphics.client;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.vaadin.addon.gwtgraphics.client.animation.Animatable;
 import org.vaadin.addon.gwtgraphics.client.fill.Fill;
 import org.vaadin.addon.gwtgraphics.client.gradient.Gradient;
 import org.vaadin.addon.gwtgraphics.client.impl.SVGImpl;
@@ -56,7 +58,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Henri Kerola
  */
 public abstract class VectorObject extends Widget implements HasClickHandlers,
-HasAllMouseHandlers, HasDoubleClickHandlers {
+HasAllMouseHandlers, HasDoubleClickHandlers, Animatable {
 
 	private static final SVGImpl impl = GWT.create(SVGImpl.class);
 
@@ -129,7 +131,7 @@ HasAllMouseHandlers, HasDoubleClickHandlers {
 	/**
 	 * Get SVG name of the element that this VectorObject represents
 	 *
-	 * @return a string like 'line' or 'rect' or whatever
+	 * @return a string like 'line' or 'rect'
 	 */
 	protected abstract String getSVGElementName();
 
@@ -209,12 +211,12 @@ HasAllMouseHandlers, HasDoubleClickHandlers {
 			if(join != null) {
 				e.setAttribute("stroke-linejoin", join.toString().toLowerCase());
 			}
-			double[] dashes = stroke.getDashArray();
-			if(dashes.length>0) {
-				String str = Double.toString(dashes[0]);
-				for(int i=1; i<dashes.length;i++) {
+			List<Double> dashes = stroke.getDashArray();
+			if(!dashes.isEmpty()) {
+				String str = Double.toString(dashes.get(0));
+				for(int i=1; i<dashes.size();i++) {
 					str += ',';
-					str += dashes[i];
+					str += dashes.get(i);
 				}
 				e.setAttribute("stroke-dasharray", str);
 				if(stroke.getDashOffset() != 0.0){
@@ -269,8 +271,25 @@ HasAllMouseHandlers, HasDoubleClickHandlers {
 		setPropertyDouble(pname,pvalue);
 	}
 
-	public void setPropertyDouble(String pname, double pvalue) {
-		setProperty(pname, "" + pvalue);
+	@Override
+	public void setPropertyDouble(String property, double value) {
+		property = property.toLowerCase();
+		GWT.log("set Property Double called in vector object" + property + " " + value);
+		if ("x".equals(property)) {
+			setX((int) value);
+		} else if ("y".equals(property)) {
+			setY((int) value);
+		} else if ("fillopacity".equals(property)) {
+			getFill().setOpacity(value);
+		} else if ("strokeopacity".equals(property)) {
+			getStroke().setOpacity(value);
+		} else if ("strokewidth".equals(property)) {
+			getStroke().setLineWidth(value);
+		} else if ("rotation".equals(property)) {
+			setRotation(value);
+		} else {
+			setProperty(property, String.valueOf(value));
+		}
 	}
 
 	public void setSize(double width, double height) {
@@ -288,10 +307,12 @@ HasAllMouseHandlers, HasDoubleClickHandlers {
 
 	public void setX(double x) {
 		posX = x;
+		transformDirty = true;
 	}
 
 	public void setY(double y) {
 		posY = y;
+		transformDirty = true;
 	}
 
 	public void setPosition(double x, double y) {
@@ -364,6 +385,18 @@ HasAllMouseHandlers, HasDoubleClickHandlers {
 	@Override
 	public void setStyleName(String style) {
 		getImpl().setStyleName(getElement(), style);
+	}
+
+	@Override
+	public void setHeight(String height) {
+		throw new UnsupportedOperationException(
+				"VectorObject doesn't support setHeight");
+	}
+
+	@Override
+	public void setWidth(String width) {
+		throw new UnsupportedOperationException(
+				"VectorObject doesn't support setWidth");
 	}
 
 	/*

@@ -20,15 +20,15 @@ import org.vaadin.addon.gwtgraphics.client.VectorObject;
 
 /**
  * Rectangle represents a rectangle.
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
 public class Rectangle extends Shape {
 
 	/**
 	 * Creates a new Rectangle with the given position and size properties.
-	 * 
+	 *
 	 * @param x
 	 *            the x-coordinate position of the top-left corner of the
 	 *            rectangle in pixels
@@ -52,7 +52,7 @@ public class Rectangle extends Shape {
 
 	/**
 	 * Gets the radius of rounded corners in pixels.
-	 * 
+	 *
 	 * @return radius of rounded corners in pixels
 	 */
 	public int getRoundedCorners() {
@@ -62,7 +62,7 @@ public class Rectangle extends Shape {
 	/**
 	 * Sets the radius of rounded corners in pixels. Value 0 disables rounded
 	 * corners.
-	 * 
+	 *
 	 * @param radius
 	 *            radius of rounded corners in pixels
 	 */
@@ -76,5 +76,14 @@ public class Rectangle extends Shape {
 	@Override
 	public String getSVGElementName() {
 		return "rect";
+	}
+
+	@Override
+	public void setPropertyDouble(String property, double value) {
+		if("roundedcorners".equals(property)) {
+			setRoundedCorners((int)value);
+		} else{
+			super.setPropertyDouble(property, value);
+		}
 	}
 }

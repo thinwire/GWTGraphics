@@ -17,28 +17,29 @@ package org.vaadin.addon.gwtgraphics.client;
 
 /**
  * Classes implementing this class are able to contain VectorObjects.
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
 public interface VectorObjectContainer {
 
 	/**
-	 * 
+	 *
 	 * Add the given VectorObject to this VectorObjectContainer.
-	 * 
+	 *
 	 * @param vo
 	 *            VectorObject to be added
 	 * @return added VectorObject
 	 */
 	public abstract VectorObject add(VectorObject vo);
 
+
 	/**
 	 * Insert the given VectorObject before the specified index.
-	 * 
+	 *
 	 * If the VectorObjectContainer contains already the VectorObject, it will
 	 * be removed from the VectorObjectContainer before insertion.
-	 * 
+	 *
 	 * @param vo
 	 *            VectorObject to be inserted
 	 * @param beforeIndex
@@ -51,19 +52,19 @@ public interface VectorObjectContainer {
 
 	/**
 	 * Remove the given VectorObject from this VectorObjectContainer.
-	 * 
+	 *
 	 * @param vo
 	 *            VectorObject to be removed
-	 * 
+	 *
 	 * @return removed VectorObject or null if the container doesn't contained
 	 *         the given VectorObject
 	 */
 	public abstract VectorObject remove(VectorObject vo);
 
 	/**
-	 * 
+	 *
 	 * Brings the given VectorObject to front in this VectorObjectContainer.
-	 * 
+	 *
 	 * @param vo
 	 *            VectorObject to be brought to front
 	 * @return the popped VectorObject
@@ -77,14 +78,14 @@ public interface VectorObjectContainer {
 
 	/**
 	 * Returns the number of VectorObjects in this VectorObjectContainer.
-	 * 
+	 *
 	 * @return the number of VectorObjects in this VectorObjectContainer.
 	 */
 	public abstract int getVectorObjectCount();
 
 	/**
 	 * Returns the VectorObject element at the specified position.
-	 * 
+	 *
 	 * @param index
 	 *            index of element to return.
 	 * @return the VectorObject element at the specified position.

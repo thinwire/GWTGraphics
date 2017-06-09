@@ -1,32 +1,45 @@
 package org.vaadin.addon.gwtgraphics.client.filter;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
-public abstract class FilterEffect {
+import org.vaadin.addon.gwtgraphics.client.impl.util.SVGUtil;
+
+import com.google.gwt.dom.client.Element;
+
+public class FilterEffect {
 
 	private static int INSTANCE_COUNT = 0;
-	
+
 	public static enum InputSource {
-		SOURCE_GRAPHIC,
-		CUSTOM
+		SOURCE_GRAPHIC ("SourceGraphic"),
+		CUSTOM("Custom");
+
+		private String str;
+
+		InputSource(String str) {
+			this.str = str;
+		}
+
+		public String getSource() {
+			return str;
+		}
+
+
 	}
 
 	private Map<String, String> parameters;
 	private InputSource inputSource = InputSource.SOURCE_GRAPHIC;
-	private String input;
-	private String result;
 	private String id;
 	private String tag;
-	
-	protected FilterEffect(String tag) {
+
+	public FilterEffect(String tag) {
 		this.tag = tag;
 		parameters = new LinkedHashMap<String,String>();
 		id = "filter_effect_" + (++INSTANCE_COUNT);
-		result = id;
 	}
-	
+
 	public String getID() {
 		return id;
 	}
@@ -34,32 +47,19 @@ public abstract class FilterEffect {
 	public void setInput(String s) {
 		if(s == null) {
 			inputSource = InputSource.SOURCE_GRAPHIC;
-			input = "SourceGraphic";
 		} else {
 			inputSource = InputSource.CUSTOM;
-			input = s;
 		}
 	}
-	
+
 	public InputSource getInputSource() {
 		return inputSource;
 	}
-	
-	public String getInput() {
-		return input;
-	}
 
-	public void setResult(String resultString) {
-		result = resultString;
-	}
-	
-	public String getResult() {
-		return result;
-	}
-	
+
 	/**
 	 * Get current value of a previously set parameter
-	 * 
+	 *
 	 * @param pname
 	 *            name of parameter
 	 * @return a String value or null
@@ -71,7 +71,7 @@ public abstract class FilterEffect {
 	/**
 	 * Get the current value of a previously set parameter, or a default value
 	 * if no value is currently set
-	 * 
+	 *
 	 * @param pname
 	 *            name of parameter
 	 * @param defaultValue
@@ -88,7 +88,7 @@ public abstract class FilterEffect {
 
 	/**
 	 * Set a parameter. If pvalue is null, the parameter is removed.
-	 * 
+	 *
 	 * @param pname
 	 *            name of parameter
 	 * @param pvalue
@@ -102,22 +102,13 @@ public abstract class FilterEffect {
 		}
 	}
 
-	/**
-	 * Get the SVG string representation of this Filter Effect
-	 * @return
-	 */
-	public String toSVGString() {
-		String tag = "<" + this.tag + " ";
-		tag += "in=\"" + input + "\" ";
-		Iterator<String> it = parameters.keySet().iterator();
-		while(it.hasNext()) {
-			String key = it.next();
-			String value = parameters.get(key);
-			tag += key + "=\"" + value + "\" ";
+	public Element getElement() {
+		Element element = SVGUtil.createSVGElementNS(tag);
+		element.setAttribute("in", getInputSource().getSource());
+		for(Entry<String,String> entry: parameters.entrySet()){
+			element.setAttribute(entry.getKey(), entry.getValue());
 		}
-		
-		tag += "/>";
-		return tag;
+		return element;
 	}
-	
+
 }
