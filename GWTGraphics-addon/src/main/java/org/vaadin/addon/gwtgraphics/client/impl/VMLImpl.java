@@ -44,12 +44,12 @@ import com.google.gwt.regexp.shared.RegExp;
 
 /**
  * This class contains the VML implementation module of GWT Graphics.
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
 public class VMLImpl extends SVGImpl {
-	
+
 	// TODO: get rid of all this crap
 
 	@Override
@@ -164,7 +164,7 @@ public class VMLImpl extends SVGImpl {
 	public void setY(Element element, int y, boolean attached) {
 		setXY(element, y, false, attached);
 	}
-	
+
 	private MatchResult getCoordOrigin(Element e){
 		String coordorigin = e.getAttribute("coordorigin");
 		return coordorigin != null ? RegExp.compile("(\\-?\\d+)\\s(\\-?\\d+)").exec(coordorigin) : null;
@@ -178,7 +178,7 @@ public class VMLImpl extends SVGImpl {
 	@Override
 	public void setFillColor(Element element, String color) {
 		Element fill = VMLUtil.getOrCreateChildElementWithTagName(element,
-		"fill");
+				"fill");
 		if (color == null) {
 			fill.setPropertyString("color", "black");
 			fill.setPropertyBoolean("on", false);
@@ -209,7 +209,7 @@ public class VMLImpl extends SVGImpl {
 	@Override
 	public void setStrokeColor(Element element, String color) {
 		Element stroke = VMLUtil.getOrCreateChildElementWithTagName(element,
-		"stroke");
+				"stroke");
 		stroke.setPropertyString("color", color);
 		stroke.setPropertyBoolean("on", color != null ? true : false);
 		element.setPropertyString("_stroke-color", color);
@@ -223,7 +223,7 @@ public class VMLImpl extends SVGImpl {
 	@Override
 	public void setStrokeWidth(Element element, int width, boolean attached) {
 		Element stroke = VMLUtil.getOrCreateChildElementWithTagName(element,
-		"stroke");
+				"stroke");
 		stroke.setPropertyString("weight", width + "px");
 		stroke.setPropertyBoolean("on", width > 0 ? true : false);
 		// store value for getter
@@ -348,7 +348,8 @@ public class VMLImpl extends SVGImpl {
 		element.getAttribute("path").concat(path.toString());
 	}
 
-	private void appendPathStep(StringBuilder path, PathStep step) {
+	@Override
+	protected void appendPathStep(StringBuilder path, PathStep step) {
 		if (step instanceof Arc) {
 			// TODO
 		} else if (step instanceof CurveTo) {
@@ -404,7 +405,7 @@ public class VMLImpl extends SVGImpl {
 		String tagName = VMLUtil.getTagName(element);
 		if ( tagName.equals("group")){
 			int other = x ? getY(element) : getX(element);
-			
+
 			StringBuilder sb = new StringBuilder();
 			if ( x ){
 				sb.append(-xy).append(" ").append(other);
@@ -430,8 +431,8 @@ public class VMLImpl extends SVGImpl {
 				setRotation(element, rot, attached);
 			} else if (tagName.equals("oval")) {
 				xy = xy
-				- NumberUtil.parseIntValue(element.getStyle()
-						.getProperty(x ? "width" : "height"), 0) / 2;
+						- NumberUtil.parseIntValue(element.getStyle()
+								.getProperty(x ? "width" : "height"), 0) / 2;
 			}
 			element.getStyle().setPropertyPx(x ? "left" : "top", xy);
 		}
@@ -506,15 +507,15 @@ public class VMLImpl extends SVGImpl {
 		.setProperty(
 				"font",
 				element.getPropertyInt("_fontsize") + "px "
-				+ element.getPropertyString("_fontfamily"));
+						+ element.getPropertyString("_fontfamily"));
 		fixTextPosition(element, attached);
 	}
 
 	private boolean isTextElement(Element element) {
 		return VMLUtil.getTagName(element).equals("shape")
-		&& element.getFirstChildElement() != null
-		&& VMLUtil.getTagName(element.getFirstChildElement()).equals(
-				"path");
+				&& element.getFirstChildElement() != null
+				&& VMLUtil.getTagName(element.getFirstChildElement()).equals(
+						"path");
 	}
 
 	@Override
