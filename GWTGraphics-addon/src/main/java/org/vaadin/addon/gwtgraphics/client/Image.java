@@ -19,15 +19,15 @@ import org.vaadin.addon.gwtgraphics.client.animation.Animatable;
 
 /**
  * Image represents a raster image that can be embedded into DrawingArea.
- * 
+ *
  * @author Henri Kerola
- * 
+ *
  */
 public class Image extends VectorObject implements Animatable {
 
 	/**
 	 * Create a new Image with the given properties.
-	 * 
+	 *
 	 * @param x
 	 *            the x-coordinate position of the top-left corner of the image
 	 *            in pixels
@@ -54,22 +54,21 @@ public class Image extends VectorObject implements Animatable {
 
 	/**
 	 * Returns the URL of the image currently shown.
-	 * 
+	 *
 	 * @return URL of the image
 	 */
 	public String getHref() {
-		return getProperty("href", "");
+		return getProperty("xlink:href", "");
 	}
 
 	/**
 	 * Sets the URL of the image to be shown.
-	 * 
+	 *
 	 * @param href
 	 *            URL of the image to be shown
 	 */
 	public void setHref(String href) {
-		setProperty("href", href);
-		redraw();
+		setProperty("xlink:href", href);
 	}
 
 	@Override
@@ -77,5 +76,5 @@ public class Image extends VectorObject implements Animatable {
 		return "image";
 	}
 
-	
+
 }
