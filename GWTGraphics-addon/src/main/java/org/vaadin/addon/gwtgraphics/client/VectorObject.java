@@ -23,6 +23,7 @@ import org.vaadin.addon.gwtgraphics.client.animation.Animatable;
 import org.vaadin.addon.gwtgraphics.client.fill.Fill;
 import org.vaadin.addon.gwtgraphics.client.gradient.Gradient;
 import org.vaadin.addon.gwtgraphics.client.impl.SVGImpl;
+import org.vaadin.addon.gwtgraphics.client.impl.util.SVGUtil;
 import org.vaadin.addon.gwtgraphics.client.stroke.Stroke;
 import org.vaadin.addon.gwtgraphics.client.stroke.Stroke.LineCap;
 import org.vaadin.addon.gwtgraphics.client.stroke.Stroke.LineJoin;
@@ -178,9 +179,13 @@ HasAllMouseHandlers, HasDoubleClickHandlers, Animatable {
 		Element e = getElement();
 		MatrixTransform transform = getTransform();
 
-		for(String property : properties.keySet()) {
+		for (String property : properties.keySet()) {
 			String value = properties.get(property);
-			e.setAttribute(property, value);
+			if ("xlink:href".equals(property)) {
+				SVGUtil.setAttributeNS("http://www.w3.org/1999/xlink", e, property, value);
+			} else {
+				e.setAttribute(property, value);
+			}
 		}
 
 		if(fillType == FillType.SOLID) {
