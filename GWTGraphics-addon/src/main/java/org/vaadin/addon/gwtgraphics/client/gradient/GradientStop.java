@@ -15,14 +15,26 @@ public class GradientStop{
 		this(0, 1.0, "white");
 	}
 
+	/**
+	 *
+	 * @param offsetPct
+	 *            The offset given as a value between 0.0 and 1.0
+	 * @param opacity
+	 *            The opacity given as a value between 0.0 and 1.0
+	 * @param color
+	 */
 	public GradientStop(double offsetPct, double opacity, String color) {
 		offset = offsetPct;
 		this.opacity = opacity;
 		this.color = color;
 	}
 
+	/**
+	 * @param pct
+	 *            The offset given as a value between 0.0 and 1.0
+	 */
 	public void setOffset(double pct) {
-		offset = Math.min(100, Math.max(0, pct));
+		offset = Math.min(1.0, Math.max(0, pct));
 	}
 
 	public double getOffset() {
@@ -36,6 +48,11 @@ public class GradientStop{
 		this.color = color;
 	}
 
+	/**
+	 *
+	 * @param opacity
+	 *            The opacity given as a value between 0.0 and 1.0
+	 */
 	public void setOpacity(double opacity) {
 		this.opacity = offset = Math.min(1, Math.max(0, opacity));
 	}

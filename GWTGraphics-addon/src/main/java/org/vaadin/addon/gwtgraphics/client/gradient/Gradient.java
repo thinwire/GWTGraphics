@@ -9,7 +9,9 @@ import org.vaadin.addon.gwtgraphics.client.Definition;
 import org.vaadin.addon.gwtgraphics.client.transform.Transform;
 
 /**
- * Base gradient class
+ * Base gradient class. Note that a gradient has a definition. That mean it has
+ * to be added to the drawing area explicitly, not only to the object where it
+ * is applied.
  */
 public abstract class Gradient implements Definition{
 

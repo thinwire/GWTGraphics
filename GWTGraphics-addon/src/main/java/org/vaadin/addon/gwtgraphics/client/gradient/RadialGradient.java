@@ -11,6 +11,18 @@ public class RadialGradient extends Gradient {
 	public RadialGradient() {
 	}
 
+	/**
+	 *
+	 * @param cx
+	 *            A value between 0.0 and 1.0
+	 * @param cy
+	 *            A value between 0.0 and 1.0
+	 * @param fx
+	 *            A value between 0.0 and 1.0
+	 * @param fy
+	 *            A value between 0.0 and 1.0
+	 * @param radius
+	 */
 	public RadialGradient(double cx, double cy,  double fx, double fy, double radius) {
 		this.cx = cx;
 		this.cy = cy;
@@ -33,6 +45,11 @@ public class RadialGradient extends Gradient {
 		return cx;
 	}
 
+	/**
+	 *
+	 * @param cx
+	 *            A value between 0.0 and 1.0
+	 */
 	public void setCx(double cx) {
 		this.cx = cx;
 	}
@@ -41,6 +58,11 @@ public class RadialGradient extends Gradient {
 		return cy;
 	}
 
+	/**
+	 *
+	 * @param cy
+	 *            A value between 0.0 and 1.0
+	 */
 	public void setCy(double cy) {
 		this.cy = cy;
 	}
@@ -49,6 +71,11 @@ public class RadialGradient extends Gradient {
 		return fx;
 	}
 
+	/**
+	 *
+	 * @param fx
+	 *            A value between 0.0 and 1.0
+	 */
 	public void setFx(double fx) {
 		this.fx = fx;
 	}
@@ -57,6 +84,11 @@ public class RadialGradient extends Gradient {
 		return fy;
 	}
 
+	/**
+	 *
+	 * @param fy
+	 *            A value between 0.0 and 1.0
+	 */
 	public void setFy(double fy) {
 		this.fy = fy;
 	}

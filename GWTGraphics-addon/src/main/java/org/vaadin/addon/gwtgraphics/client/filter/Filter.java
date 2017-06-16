@@ -8,6 +8,14 @@ import org.vaadin.addon.gwtgraphics.client.impl.util.SVGUtil;
 
 import com.google.gwt.dom.client.Element;
 
+/**
+ * Class for representing SVG filters. Note that a filter has a definition. That
+ * mean it has to be added to the drawing area explicitly, not only to the
+ * object where it is applied.
+ * 
+ * @author Pontus Bostrom
+ *
+ */
 public class Filter implements Definition{
 
 	protected static int INSTANCE_COUNT = 0;

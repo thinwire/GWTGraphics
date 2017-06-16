@@ -12,11 +12,29 @@ public class LinearGradient extends Gradient {
 		this(0,0,1,1);
 	}
 
+	/**
+	 *
+	 * @param x0
+	 *            A value between 0.0 and 1.0
+	 * @param y0
+	 *            A value between 0.0 and 1.0
+	 * @param x1
+	 *            A value between 0.0 and 1.0
+	 * @param y1
+	 *            A value between 0.0 and 1.0
+	 */
 	public LinearGradient(double x0, double y0, double x1, double y1) {
 		setStartPosition(x0, y0);
 		setEndPosition(x1, y1);
 	}
 
+	/**
+	 *
+	 * @param x
+	 *            A value between 0.0 and 1.0
+	 * @param y
+	 *            A value between 0.0 and 1.0
+	 */
 	public void setStartPosition(double x, double y) {
 		x0 = x;
 		y0 = y;
@@ -32,6 +50,13 @@ public class LinearGradient extends Gradient {
 		return y0;
 	}
 
+	/**
+	 *
+	 * @param x
+	 *            A value between 0.0 and 1.0
+	 * @param y
+	 *            A value between 0.0 and 1.0
+	 */
 	public void setEndPosition(double x, double y) {
 		x1 = x;
 		y1 = y;
