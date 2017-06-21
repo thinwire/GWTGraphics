@@ -3,7 +3,6 @@ package org.vaadin.addon.gwtgraphics.testapp.client;
 import org.vaadin.addon.gwtgraphics.client.Group;
 import org.vaadin.addon.gwtgraphics.client.Image;
 import org.vaadin.addon.gwtgraphics.client.Line;
-import org.vaadin.addon.gwtgraphics.client.Shape;
 import org.vaadin.addon.gwtgraphics.client.VectorObject;
 import org.vaadin.addon.gwtgraphics.client.filter.Filter;
 import org.vaadin.addon.gwtgraphics.client.shape.Circle;
@@ -25,8 +24,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class EditorPanel extends VerticalPanel implements ChangeHandler,
-ClickHandler {
+public class EditorPanel extends VerticalPanel implements ChangeHandler, ClickHandler {
 
 	private Metadata metadata;
 
@@ -105,8 +103,7 @@ ClickHandler {
 		voEditor = null;
 		if (vo instanceof Rectangle) {
 			type.setSelectedIndex(1);
-			RectangleEditor editor = new RectangleEditor((Rectangle) vo,
-					metadata, newVo);
+			RectangleEditor editor = new RectangleEditor((Rectangle) vo, metadata, newVo);
 			voEditor = editor;
 		} else if (vo instanceof Circle) {
 			type.setSelectedIndex(2);
@@ -114,8 +111,7 @@ ClickHandler {
 			voEditor = editor;
 		} else if (vo instanceof Ellipse) {
 			type.setSelectedIndex(3);
-			EllipseEditor editor = new EllipseEditor((Ellipse) vo, metadata,
-					newVo);
+			EllipseEditor editor = new EllipseEditor((Ellipse) vo, metadata, newVo);
 			voEditor = editor;
 		} else if (vo instanceof Line) {
 			type.setSelectedIndex(4);
@@ -201,8 +197,7 @@ ClickHandler {
 				setVectorObject(vo, true);
 			}
 		} else if (sender == vectorObjectList) {
-			setVectorObject(metadata.getVectorObject(vectorObjectList
-					.getSelectedIndex()), false);
+			setVectorObject(metadata.getVectorObject(vectorObjectList.getSelectedIndex()), false);
 		}
 	}
 
@@ -211,15 +206,14 @@ ClickHandler {
 		if (sender == add) {
 			VectorObject vo = voEditor.getVectorObject();
 			voEditor.getVectorObjectContainer().add(vo);
-			if(vo.getGradientFill() != null) {
+			if (vo.getGradientFill() != null) {
 				voEditor.getDrawingArea().add(vo.getGradientFill());
 			}
-			if( vo instanceof Shape) {
-				Filter f = ((Shape) vo).getFilter();
-				if(f!=null) {
-					voEditor.getDrawingArea().add(f);
-				}
+			Filter f = vo.getFilter();
+			if (f != null) {
+				voEditor.getDrawingArea().add(f);
 			}
+
 			setVectorObject(vo, false);
 			vo.redraw();
 		} else if (sender == remove) {
@@ -227,7 +221,7 @@ ClickHandler {
 			setVectorObject(null, true);
 		} else if (sender instanceof VectorObject) {
 			setVectorObject((VectorObject) sender, false);
-			if(((VectorObject) sender).getGradientFill() != null) {
+			if (((VectorObject) sender).getGradientFill() != null) {
 				voEditor.getDrawingArea().add(((VectorObject) sender).getGradientFill());
 			}
 			((VectorObject) sender).redraw();

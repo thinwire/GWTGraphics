@@ -25,8 +25,6 @@ public class ShapeEditor extends VectorObjectEditor{
 
 	private GradientEditor gradientEditor;
 
-	private FilterEditor filterEditor;
-
 	public ShapeEditor(Shape vo, Metadata metadata, boolean newVo) {
 		super(vo, metadata, newVo);
 		xCoord = addTextBoxRow("X", 3);
@@ -50,9 +48,6 @@ public class ShapeEditor extends VectorObjectEditor{
 		gradientEditor.setTarget(vo);
 		addRow("Gradient", gradientEditor);
 
-		filterEditor = new FilterEditor();
-		filterEditor.setTarget(vo);
-		addRow("Filter", filterEditor);
 
 		if (vo != null) {
 			xCoord.setText("" + vo.getX());
