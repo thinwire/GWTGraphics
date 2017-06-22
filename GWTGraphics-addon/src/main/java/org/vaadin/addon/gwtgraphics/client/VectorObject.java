@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.vaadin.addon.gwtgraphics.client.animation.Animatable;
 import org.vaadin.addon.gwtgraphics.client.fill.Fill;
+import org.vaadin.addon.gwtgraphics.client.filter.Filter;
 import org.vaadin.addon.gwtgraphics.client.gradient.Gradient;
 import org.vaadin.addon.gwtgraphics.client.impl.SVGImpl;
 import org.vaadin.addon.gwtgraphics.client.impl.util.SVGUtil;
@@ -76,6 +77,7 @@ HasAllMouseHandlers, HasDoubleClickHandlers, Animatable {
 	protected FillType fillType;
 	protected Gradient fillGradient;
 	protected MatrixTransform transform;
+	protected Filter filter;
 
 	protected double width, height;
 	protected double posX, posY;
@@ -170,10 +172,19 @@ HasAllMouseHandlers, HasDoubleClickHandlers, Animatable {
 		return fill;
 	}
 
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+
 	/**
-	 * Re-create the attributes of this VectorObject
+	 * Render the Vector object with the given properties
+	 * on the SVG canvas. This method should be called every time the SVG should be
+	 * updated.
 	 *
-	 * TODO: make sure this is used everywhere it can be
 	 */
 	public void redraw() {
 		Element e = getElement();
@@ -235,6 +246,10 @@ HasAllMouseHandlers, HasDoubleClickHandlers, Animatable {
 		}
 		if(height > -1) {
 			e.setAttribute("height", "" + height);
+		}
+
+		if (filter != null) {
+			e.setAttribute("filter", "url(#" + filter.getId() + ")");
 		}
 
 		e.setAttribute("transform", transform.toSVGString());

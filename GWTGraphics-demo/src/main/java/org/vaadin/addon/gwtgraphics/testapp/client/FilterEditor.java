@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.vaadin.addon.gwtgraphics.client.Shape;
+import org.vaadin.addon.gwtgraphics.client.VectorObject;
 import org.vaadin.addon.gwtgraphics.client.filter.Filter;
 import org.vaadin.addon.gwtgraphics.client.filter.FilterEffect;
 
@@ -28,7 +28,7 @@ public class FilterEditor extends VerticalPanel{
 	ParameterEditor filterParams;
 	List<EffectEditor> filterEditors;
 	VerticalPanel filterEditorLayout;
-	Shape target;
+	VectorObject target;
 
 
 	public FilterEditor() {
@@ -74,7 +74,7 @@ public class FilterEditor extends VerticalPanel{
 
 	}
 
-	public void setTarget(Shape shape) {
+	public void setTarget(VectorObject shape) {
 		target = shape;
 	}
 

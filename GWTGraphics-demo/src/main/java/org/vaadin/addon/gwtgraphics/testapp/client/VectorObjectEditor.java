@@ -24,6 +24,8 @@ public class VectorObjectEditor extends FlexTable implements ChangeHandler {
 
 	private DashEditor dashEditor;
 
+	private FilterEditor filterEditor;
+
 	private boolean newVo;
 
 	public VectorObjectEditor(VectorObject vo, Metadata metadata, boolean newVo) {
@@ -49,6 +51,10 @@ public class VectorObjectEditor extends FlexTable implements ChangeHandler {
 			dashEditor.setTarget(vo);
 		}
 		addRow("Dash array", dashEditor);
+
+		filterEditor = new FilterEditor();
+		filterEditor.setTarget(vo);
+		addRow("Filter", filterEditor);
 	}
 
 	protected TextBox addTextBoxRow(String caption, int visibleLength) {
