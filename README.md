@@ -1,6 +1,9 @@
 # MyComponent Add-on for Vaadin 7
 
-${ComponentClassName} is a UI component add-on for Vaadin 7.
+Overview
+The goal of the GWT Graphics library is to provide consistent cross-browser vector graphics library for Google Web Toolkit. Under the hood, the library uses to XML-based languages: SVG and VML. VML implementation is for Internet Explorer. Other browsers use SVG implementation.
+
+Please note that GWT Graphics is a library for GWT. If you want to use it with Vaadin, you have to create your own Vaadin widget and use the library on the client-side.
 
 ## Online demo
 
@@ -51,15 +54,20 @@ Debugging client side code in the GWTGraphics-demo project:
  
 ## Release notes
 
-### Version 1.0-SNAPSHOT
-- ...
-- ...
+### Version 1.0.0
+- IE9 uses SVG for rendering now
+- JavaDoc enhancements
+- GWT Graphics' version can be read from GWT Java code
+- Added Animate.onComplete() that is fired when animation completes
+- Bug fixes
 
-## Roadmap
-
-This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases. That said, the following features are planned for upcoming releases:
-- ...
-- ...
+### Version 2.0.0
+- Mavenized project
+- Color and style (apply patterns) for every step in a path can be changed.
+- Vector object's borders can be styled (e.g. to lets say dotted lines or dashes or other patterns).  
+- Anti-aliasing support added to paths
+- A way to add a shadow to a Vector object
+- Gradient fill support added
 
 ## Issue tracking
 
@@ -79,32 +87,13 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-MyComponent is written by <...>
+GWT graphics add-on versions to 1.x is written by Henri Kerola. Updates to version 2.0.0 were contributed by Patrik Lindström and Pontus Boström 
 
 # Developer Guide
 
 ## Getting started
 
-Here is a simple example on how to try out the add-on component:
+For a more comprehensive example, see the demo application
 
-<...>
+https://github.com/TatuLund/GWTGraphics/tree/master/GWTGraphics-demo/src/main/java/org/vaadin/addon/gwtgraphics/testapp/client
 
-For a more comprehensive example, see src/test/java/org/vaadin/template/demo/DemoUI.java
-
-## Features
-
-### Feature A
-
-<...>
-
-### Feature B
-
-<...>
-
-### Feature C
-
-<...>
-
-## API
-
-MyComponent JavaDoc is available online at <...>
