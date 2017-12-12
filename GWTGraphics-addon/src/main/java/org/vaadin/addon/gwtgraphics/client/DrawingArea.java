@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -96,6 +97,66 @@ implements VectorObjectContainer, HasClickHandlers, HasAllMouseHandlers, HasDoub
 		setElement(container);
 
 		root = getImpl().createDrawingArea(container, width, height);
+
+		addMouseMoveHandler(new MouseMoveHandler() {
+			@Override
+			public void onMouseMove(MouseMoveEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+		addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+		addDoubleClickHandler(new DoubleClickHandler() {
+			@Override
+			public void onDoubleClick(DoubleClickEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+		addMouseDownHandler(new MouseDownHandler() {
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+		addMouseOutHandler(new MouseOutHandler() {
+			@Override
+			public void onMouseOut(MouseOutEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+		addMouseOverHandler(new MouseOverHandler() {
+			@Override
+			public void onMouseOver(MouseOverEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+		addMouseUpHandler(new MouseUpHandler() {
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+		addMouseWheelHandler(new MouseWheelHandler() {
+			@Override
+			public void onMouseWheel(MouseWheelEvent event) {
+				fireEventForContainingObejcts(event);
+			}
+		});
+	}
+
+	private void fireEventForContainingObejcts(MouseEvent event) {
+		final int clientX = event.getClientX();
+		final int clientY = event.getClientY();
+		for (int i=0; i<getVectorObjectCount(); i++) {
+                        final VectorObject vectorObject = getVectorObject(i);
+                        if (vectorObject.contains(clientX, clientY)) {
+                                vectorObject.fireEvent(event);
+                        }
+                }
 	}
 
 	protected SVGImpl getImpl() {
