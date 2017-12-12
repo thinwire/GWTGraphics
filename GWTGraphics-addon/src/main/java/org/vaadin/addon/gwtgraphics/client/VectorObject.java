@@ -103,6 +103,10 @@ HasAllMouseHandlers, HasDoubleClickHandlers, Animatable {
 		transformDirty = true;
 	}
 
+        public boolean contains(int clientX, int clientY) {
+	    return  (clientX>=posX && clientX<=(posX+width) && clientY>=posY && clientY<=(posY+height));
+        }
+
 	protected MatrixTransform getTransform() {
 		if(transformDirty) {
 

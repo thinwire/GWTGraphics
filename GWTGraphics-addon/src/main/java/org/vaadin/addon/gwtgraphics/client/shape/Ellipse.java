@@ -44,7 +44,14 @@ public class Ellipse extends Shape {
 		setCenter(cx,cy);
 		setRadius(radiusX, radiusY);
 	}
-	
+
+	@Override
+	public boolean contains(int clientX, int clientY) {
+		return (Math.pow(clientX-getCX(), 2)/Math.pow(getRadiusX(), 2)+Math.pow(clientY-getCY(), 2)/Math.pow
+				(getRadiusY(), 2))<=1;
+
+	}
+
 	public void setCenter(double x, double y) {
 		setPropertyDouble("cx", x);
 		setPropertyDouble("cy", y);

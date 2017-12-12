@@ -2,6 +2,7 @@ package org.vaadin.addon.gwtgraphics.testapp.client;
 
 import org.vaadin.addon.gwtgraphics.client.DrawingArea;
 import org.vaadin.addon.gwtgraphics.client.bundle.GWTGraphicsConstants;
+import org.vaadin.addon.gwtgraphics.client.shape.Rectangle;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,13 +23,16 @@ public class InteractiveTestApplication extends HorizontalPanel {
 
 	private CodeView code;
 
+	Rectangle topRec = new Rectangle(20, 50, 150, 100);
+	Rectangle bottomRec = new Rectangle(80, 80, 150, 150);
+
 	public InteractiveTestApplication() {
 		metadata = new Metadata(this);
 
 		VerticalPanel vPanel = new VerticalPanel();
 		add(vPanel);
 
-		area = new DrawingArea(400, 400);
+		area = new DrawingArea(400, 600);
 		area.setStyleName("drawing-area");
 		vPanel.add(area);
 		vPanel.add(new Label("Using " + area.getRendererString()
@@ -49,7 +53,41 @@ public class InteractiveTestApplication extends HorizontalPanel {
 
 		editPanel = new EditorPanel(metadata);
 		add(editPanel);
+
+		bottomRec.addMouseMoveHandler(event -> {
+			consoleLog("mousemove");
+		});
+		bottomRec.addClickHandler(event -> {
+			consoleLog("click");
+		});
+		bottomRec.addMouseOutHandler(event -> {
+			consoleLog("out");
+		});
+		bottomRec.addDoubleClickHandler(event -> {
+			consoleLog("doubleclick");
+		});
+		bottomRec.addMouseDownHandler(event -> {
+			consoleLog("mousedown");
+		});
+		bottomRec.addMouseOverHandler(event -> {
+			consoleLog("mouseover");
+		});
+		bottomRec.addMouseUpHandler(event -> {
+			consoleLog("mouseup");
+		});
+
+		area.add(bottomRec);
+		area.add(topRec);
+
+		bottomRec.redraw();
+		topRec.redraw();
+
 	}
+
+	native void consoleLog( String message) /*-{
+            console.log( "me:" + message );
+        }-*/;
+
 
 	private String getVersion() {
 		GWTGraphicsConstants constants = GWT.create(GWTGraphicsConstants.class);

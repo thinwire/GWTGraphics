@@ -43,6 +43,13 @@ public class Circle extends Shape {
 	}
 
 	@Override
+	public boolean contains(int clientX, int clientY) {
+		return (Math.pow(clientX-getX(), 2)/Math.pow(getRadius(), 2)+Math.pow(clientY-getY(), 2)/Math.pow
+				(getRadius(), 2))<=1;
+
+	}
+
+	@Override
 	protected Class<? extends VectorObject> getType() {
 		return Circle.class;
 	}
